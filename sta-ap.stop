@@ -1,0 +1,51 @@
+#!/bin/bash
+#
+# Configuration script to REVERT Pi Zero W from Local Access Point
+# https://gist.github.com/TROUBLESOM0/037d73d7e858ca9b37d9b27ee0591b34
+#
+#
+# Check script is running as root
+if [[ $( whoami ) != "root" ]]
+then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
+exit 1
+fi
+# variables
+dir=`pwd`
+bk=$dir/pre-apsta-bkup
+if test -d $bk
+then :
+else echo "The backup directory 'pre-apsta-bkup' is missing. Can't reload files"
+exit 1
+fi
+#
+# Begin script
+#
+if [[ -f $bk/dhcpcd.conf ]]
+then :
+else echo "missing dhcpcd.conf for sta-ap"
+exit 1
+fi
+
+if [[ -f $bk/dnsmasq.conf ]]
+then :
+else echo "missing dnsmasq.conf for sta-ap"
+exit 1
+fi
+
+#wpa_supplicant
+sudo mv /etc/wpa_supplicant/wpa_supplicant.conf.bkup /etc/wpa_supplicant/wpa_supplicant.conf
+#dhcpcd
+sudo cp $bk/dhcpcd.conf /etc/
+#dnsmasq
+sudo cp $bk/dnsmasq.conf /etc/
+#hostapd
+if [[ -f $bk/hostapd.conf ]]
+then sudo cp $bk/hostapd.conf /etc/hostapd/
+else sudo rm /etc/hostapd/hostapd.conf
+fi
+# config hostapd
+sudo systemctl stop hostapd
+sudo systemctl disable hostapd
+sudo systemctl mask hostapd
+# DONE - REBOOT
+sudo reboot now
