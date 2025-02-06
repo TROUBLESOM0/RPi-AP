@@ -1,6 +1,12 @@
 ### CREATE LOCAL AP ON RASPBERRY PI ZERO W
 >[NOTE: This does not give internet access.  <ins>Only creates a local network</ins>]
 
+Run [sta-ap.start](https://github.com/TROUBLESOM0/Subcloud/blob/47238d7bfd912c3939e3449e3ea28df014eed21b/sta-ap/sta-ap.start) to create Access Point.  Default SSID is "subcloud{random_number}".<br>
+It will first rename *wpa_supplicant.conf* to *wpa_supplicant.conf.bkup* so that it is not used.<br>
+Then, a backup will be made of existing **dnsmasq.conf, dhcpcd.conf,** and **hostapd.conf** (if it exists, it usually doesn't) and placed in folder named "pre-apsta-bkup" in the directory sta-ap.start is ran.<br>
+Next, it will replace the required files, 1) stopping hostapd, 2) unmasking hostapd, 3) enabling hostapd, 4) starting hostapd.<br>
+Finally, will perform reboot on system.
+
 List of required files:
 - dnsmasq.conf - *configures ip range and interface*
 - dhcpcd.conf - *configures device ip as AP*
