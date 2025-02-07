@@ -35,6 +35,12 @@ else echo "missing login.php file in /web folder"
 exit 1
 fi
 
+if [[ -f $dir/$req/default.wpa_supplicant.conf ]]
+then :
+else echo "missing default.wap_supplicant.conf for sta-ap"
+exit 1
+fi
+
 if [[ -f $dir/$req/dhcpcd.conf ]]
 then :
 else echo "missing dhcpcd.conf for sta-ap"
@@ -69,7 +75,11 @@ sudo chmod u+rw,g+r,o+r $ap/login.php
 sudo chown www-data:www-data $ap/login.php
 
 #wpa_supplicant
-sudo mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bkup
+if [[ -f /etc/wpa_supplicant/wpa_supplicant.conf ]]
+then sudo mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bkup
+else
+sudo cp $dir/$req/default.wpa_supplicant.conf /etc/wpa_supplicant.conf
+fi
 #dhcpcd
 sudo cp /etc/dhcpcd.conf $bk
 sudo cp $dir/$req/dhcpcd.conf /etc/
