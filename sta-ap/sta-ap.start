@@ -15,7 +15,7 @@ dir=`pwd`
 req=required
 whtml=$dir/web/index.html
 wlogin=$dir/web/login.php
-web=/var/www/html
+ap=/var/www/html
 sudo mkdir pre-apsta-bkup
 bk=$dir/pre-apsta-bkup
 r=$RANDOM
@@ -54,19 +54,19 @@ exit 1
 fi
 
 # Configure web files
-if test -d $web
+if test -d $ap
 then :
 else echo "$web doesn't exist; apache may be missing"
 exit 1
 fi
 # moving web files
-sudo cp $whtml $web/
-sudo cp $wlogin $web/
+sudo cp $whtml $ap/
+sudo cp $wlogin $ap/
 # Setting permissions of web files
-sudo chmod u+rw,g+r,o+r $web/index.html
-sudo chown www-data:www-data $web/index.html
-sudo chmod u+rw,g+r,o+r $web/login.php
-sudo chown www-data:www-data $web/login.php
+sudo chmod u+rw,g+r,o+r $ap/index.html
+sudo chown www-data:www-data $ap/index.html
+sudo chmod u+rw,g+r,o+r $ap/login.php
+sudo chown www-data:www-data $ap/login.php
 
 #wpa_supplicant
 sudo mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bkup
