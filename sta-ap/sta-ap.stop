@@ -12,9 +12,15 @@ fi
 # variables
 dir=`pwd`
 bk=$dir/pre-apsta-bkup
+#check if original files exist
 if test -d $bk
 then :
 else echo "The backup directory 'pre-apsta-bkup' is missing. Can't reload files"
+exit 1
+fi
+if [[ -f /etc/wpa_supplicant/wpa_supplicant.conf.bkup ]]
+then :
+else echo "missing wpa_supplicant.conf.bkup. Ending sta-ap.stop"
 exit 1
 fi
 #
@@ -47,5 +53,6 @@ fi
 sudo systemctl stop hostapd
 sudo systemctl disable hostapd
 sudo systemctl mask hostapd
+sudo rm -r $bk/
 # DONE - REBOOT
 sudo reboot now
