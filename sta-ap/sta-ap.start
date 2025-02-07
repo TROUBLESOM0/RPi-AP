@@ -20,6 +20,12 @@ line=15
 #
 # Begin script
 #
+if test -d $dir/web
+then :
+else echo "missing web directory"
+exit 1
+fi
+
 if [[ -f $dir/$req/dhcpcd.conf ]]
 then :
 else echo "missing dhcpcd.conf for sta-ap"
