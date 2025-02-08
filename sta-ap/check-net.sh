@@ -1,4 +1,4 @@
-##!/bin/bash
+#!/bin/bash
 #
 # Check network connection by pinging Google or Cloudflare
 #
@@ -18,7 +18,10 @@ if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
 fi
-#
+# variables
+dir=`pwd`
+ap=/var/www/html
+bk=$dir/pre-apsta-bkup
 #
 # Begin Script
 #
@@ -31,14 +34,14 @@ echo "No connection to Google, trying Cloudflare"
 ping -c 1 1.1.1.1 &> /dev/null
   if [ $? -ne 0 ]
   then
-  echo "No connection to Cloudflare, trying login.php"
-    if [[ ! -f /var/www/html/login.php ]]
+  echo "No connection to Cloudflare, trying apsta-bkup directory"
+    if [[ ! -d $bk ]]
     then
     echo "Starting sta-ap"
     sudo ./sta-ap.start
     exit 0
-    else echo "login.php exists. Wifi Login should be running"
-      if [[ -f /var/www/html/login.data ]]
+    else echo "apsta-bkup exists. Wifi Login should be running"
+      if [[ -f $ap/login.data ]]
       then
       echo "login.data exists"
       sudo ./sta-ap.stop
@@ -50,7 +53,7 @@ ping -c 1 1.1.1.1 &> /dev/null
   # If network is connected
   else echo "successful ping to Cloudflare."
   echo "checking if need to run sta-ap.stop"
-    if [[ -f /var/www/html/login.data ]]
+    if [[ -f $ap/login.data ]]
     then
     echo "login.data exists"
     sudo ./sta-ap.stop
@@ -60,7 +63,7 @@ ping -c 1 1.1.1.1 &> /dev/null
   fi
 else echo "successful ping to Google."
 echo "checking if need to run sta-ap.stop"
-  if [[ -f /var/www/html/login.data ]]
+  if [[ -f $ap/login.data ]]
   then
   echo "login.data exists"
   sudo ./sta-ap.stop
