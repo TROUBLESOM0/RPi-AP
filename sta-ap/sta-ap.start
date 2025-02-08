@@ -19,7 +19,7 @@ ap=/var/www/html
 sudo mkdir pre-apsta-bkup
 bk=$dir/pre-apsta-bkup
 r=$RANDOM
-line=15
+line=15 #add random to end of SSID
 #
 # Begin script
 #
