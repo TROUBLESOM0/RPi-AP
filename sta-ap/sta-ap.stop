@@ -12,6 +12,9 @@ fi
 # variables
 dir=`pwd`
 bk=$dir/pre-apsta-bkup
+_wpa=/etc/wpa_supplicant/wpa_supplicant.conf
+SSID=$(head -n 1 /var/www/html/login.data)
+PWD=$(sed -n '2p' /var/www/html/login.data)
 #check if original files exist
 if test -d $bk
 then :
@@ -38,8 +41,20 @@ else echo "missing dnsmasq.conf for sta-ap"
 exit 1
 fi
 
+if [[ -f /var/www/html/login.data ]]
+then :
+else echo "login.data missing from sta-ap.stop"
+echo "check Wifi Login"
+exit 1
+fi
+
 #wpa_supplicant
 sudo mv /etc/wpa_supplicant/wpa_supplicant.conf.bkup /etc/wpa_supplicant/wpa_supplicant.conf
+echo "" >> "$_wpa"
+echo "network={" >> "$_wpa"
+echo "        ssid=\"$SSID\"" >> "$_wpa"
+echo "        psk=\"$PWD\"" >> "$_wpa"
+echo "}" >> "$_wpa"
 #dhcpcd
 sudo cp $bk/dhcpcd.conf /etc/
 #dnsmasq
@@ -53,6 +68,8 @@ fi
 sudo systemctl stop hostapd
 sudo systemctl disable hostapd
 sudo systemctl mask hostapd
+# remove files
 sudo rm -r $bk/
+sudo rm /var/www/html/login.data
 # DONE - REBOOT
 sudo reboot now
