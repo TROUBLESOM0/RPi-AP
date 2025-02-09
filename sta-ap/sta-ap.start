@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# sta-ap.start v.1
 # Configuration script to convert Pi Zero W into Local Access Point
 # https://gist.github.com/TROUBLESOM0/037d73d7e858ca9b37d9b27ee0591b34
 #
@@ -9,20 +10,22 @@
 if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
+else echo "Starting STA-AP!"
 fi
 # variables
-dir=`pwd`
+dir=/usr/local/etc/subcloud/sta-ap
 req=required
 whtml=$dir/web/index.html
 wlogin=$dir/web/login.php
 ap=/var/www/html
-sudo mkdir pre-apsta-bkup
+sudo mkdir $dir/pre-apsta-bkup
 bk=$dir/pre-apsta-bkup
 r=$RANDOM
-line=15 #add random to end of SSID
+line=15
 #
 # Begin script
 #
+echo "checking for required files..."
 if [[ -f $whtml ]]
 then :
 else echo "missing index.html file in /web folder"
@@ -60,47 +63,66 @@ exit 1
 fi
 
 # Configure web files
+echo "starting WiFi login..."
 if test -d $ap
 then :
-else echo "$web doesn't exist; apache may be missing"
+else echo "$ap doesn't exist; apache may be missing"
 exit 1
 fi
 # moving web files
-sudo cp $whtml $ap/
-sudo cp $wlogin $ap/
+if [[ -f $ap/index.html ]]
+then cp $ap/index.html $ap/index.html.sta-ap.bkup
+else
+cp $whtml $ap/
+fi
+if [[ -f $ap/login.php ]]
+then cp $ap/login.php $ap/login.php.sta-ap.bkup
+else
+cp $wlogin $ap/
+fi
+if [[ ! -f $ap/login.data ]]
+then :
+else
+rm $ap/login.data
+fi
+
 # Setting permissions of web files
-sudo chmod u+rw,g+r,o+r $ap/index.html
-sudo chown www-data:www-data $ap/index.html
-sudo chmod u+rw,g+r,o+r $ap/login.php
-sudo chown www-data:www-data $ap/login.php
+chmod u+rw,g+r,o+r $ap/index.html
+chown www-data:www-data $ap/index.html
+chmod u+rw,g+r,o+r $ap/login.php
+chown www-data:www-data $ap/login.php
 
 #wpa_supplicant
+echo "backing up wpa_supplicant"
 if [[ -f /etc/wpa_supplicant/wpa_supplicant.conf ]]
-then sudo mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bkup
+then mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bkup
 else
-sudo cp $dir/$req/default.wpa_supplicant.conf /etc/wpa_supplicant.conf
+echo "wpa_supplicant doesn't exist... loading default..."
+cp $dir/$req/default.wpa_supplicant.conf /etc/wpa_supplicant.conf
 fi
 #dhcpcd
-sudo cp /etc/dhcpcd.conf $bk
-sudo cp $dir/$req/dhcpcd.conf /etc/
+echo "backing up system files..."
+cp /etc/dhcpcd.conf $bk
+cp $dir/$req/dhcpcd.conf /etc/
 #dnsmasq
-sudo cp /etc/dnsmasq.conf $bk
-sudo cp $dir/$req/dnsmasq.conf /etc/
+cp /etc/dnsmasq.conf $bk
+cp $dir/$req/dnsmasq.conf /etc/
 #hostapd
 if [[ -f /etc/hostapd/hostapd.conf ]]
-then sudo cp /etc/hostapd/hostapd.conf $bk
+then cp /etc/hostapd/hostapd.conf $bk
 # making backup to add random number to SSID in hostapd.conf
-sudo cp $dir/$req/hostapd.conf $bk/hostapd.conf.tmp
-sudo sed -i "${line}s/$/$r/" "${bk}/hostapd.conf.tmp"
-sudo mv $bk/hostapd.conf.tmp /etc/hostapd/hostapd.conf
-else sudo cp $dir/$req/hostapd.conf $bk/hostapd.conf.tmp
-sudo sed -i "${line}s/$/$r/" "${bk}/hostapd.conf.tmp"
-sudo mv $bk/hostapd.conf.tmp /etc/hostapd/hostapd.conf
+cp $dir/$req/hostapd.conf $bk/hostapd.conf.tmp
+sed -i "${line}s/$/$r/" "${bk}/hostapd.conf.tmp"
+mv $bk/hostapd.conf.tmp /etc/hostapd/hostapd.conf
+else cp $dir/$req/hostapd.conf $bk/hostapd.conf.tmp
+sed -i "${line}s/$/$r/" "${bk}/hostapd.conf.tmp"
+mv $bk/hostapd.conf.tmp /etc/hostapd/hostapd.conf
 fi
 # config hostapd
-sudo systemctl stop hostapd
-sudo systemctl unmask hostapd
-sudo systemctl enable hostapd
-sudo systemctl start hostapd
+systemctl stop hostapd
+systemctl unmask hostapd
+systemctl enable hostapd
+systemctl start hostapd
 # DONE - REBOOT
-sudo reboot now
+echo "COMPLETE CONFIG - REBOOTING..."
+reboot now
