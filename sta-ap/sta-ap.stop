@@ -55,7 +55,9 @@ fi
 #wpa_supplicant
 echo "restoring wpa_supplicant..."
 if [[ -f $_wpa.bkup ]]
-then sudo mv /etc/wpa_supplicant/wpa_supplicant.conf.bkup /etc/wpa_supplicant/wpa_supplicant.conf
+then sudo mv /etc/wpa_supplicant/wpa_supplicant.conf.bkup #_wpa
+sudo chown root:root $_wpa
+sudo chmod 600 $_wpa
 else :
 fi
 echo "" >> "$_wpa"
@@ -67,8 +69,12 @@ echo "}" >> "$_wpa"
 echo "restoring system files..."
 #dhcpcd
 cp $bk/dhcpcd.conf /etc/
+sudo chown root:netdev /etc/dhcpcd.conf
+sudo chmod u+rw,g+rw,o+r /etc/dhcpcd.conf
 #dnsmasq
 cp $bk/dnsmasq.conf /etc/
+sudo chown root:root /etc/dnsmasq.conf
+sudo chmod u+rw,g+r,o+r /etc/dnsmasq.conf
 #hostapd
 if [[ -f $bk/hostapd.conf ]]
 then cp $bk/hostapd.conf /etc/hostapd/
