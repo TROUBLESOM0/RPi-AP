@@ -1,4 +1,9 @@
 <?php
+// login.php v.1
+// requires install into /var/www/html
+// requires www-data:www-data u+rwx,g+rx,o+r
+//
+ini_set('display_errors', 1);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve username and password from POST data
     $username = $_POST['username'];
@@ -14,7 +19,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Write the data to the file
         fwrite($file, $data);
         fclose($file);
-        echo "Data has been saved successfully!";
+        echo "Login has been saved successfully! ";
+        echo "Configuring ...";
+        $output = shell_exec('bash /usr/local/etc/subcloud/sta-ap/web/run-check.sh');
+        echo "<pre>$output</pre>";
     } else {
         echo "Error opening the file!";
     }
@@ -22,4 +30,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo "Invalid request.";
 }
 ?>
-
