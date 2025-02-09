@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# sta-ap.stop v.1
 # Configuration script to REVERT Pi Zero W from Local Access Point
 # https://gist.github.com/TROUBLESOM0/037d73d7e858ca9b37d9b27ee0591b34
 #
@@ -8,9 +9,11 @@
 if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
+else echo "Stopping STA-AP!"
 fi
 # variables
-dir=`pwd`
+dir=/usr/local/etc/subcloud/sta-ap
+req=required
 bk=$dir/pre-apsta-bkup
 ap=/var/www/html
 _wpa=/etc/wpa_supplicant/wpa_supplicant.conf
@@ -20,12 +23,12 @@ PWD=$(sed -n '2p' $ap/login.data)
 if test -d $bk
 then :
 else echo "The backup directory 'pre-apsta-bkup' is missing. Can't reload files"
-exit 1
+echo "Reloading WiFi Credentials..."
 fi
-if [[ -f /etc/wpa_supplicant/wpa_supplicant.conf.bkup ]]
-then :
-else echo "missing wpa_supplicant.conf.bkup. Ending sta-ap.stop"
-exit 1
+if [[ ! -f $_wpa.bkup ]]
+then echo "missing wpa_supplicant.conf.bkup. Loading defaults..."
+cp $dir/$req/default.wpa_supplicant.conf $_wpa
+else :
 fi
 #
 # Begin script
@@ -50,27 +53,34 @@ exit 1
 fi
 
 #wpa_supplicant
-sudo mv /etc/wpa_supplicant/wpa_supplicant.conf.bkup /etc/wpa_supplicant/wpa_supplicant.conf
+echo "restoring wpa_supplicant..."
+if [[ -f $_wpa.bkup ]]
+then sudo mv /etc/wpa_supplicant/wpa_supplicant.conf.bkup /etc/wpa_supplicant/wpa_supplicant.conf
+else :
+fi
 echo "" >> "$_wpa"
 echo "network={" >> "$_wpa"
 echo "        ssid=\"$SSID\"" >> "$_wpa"
 echo "        psk=\"$PWD\"" >> "$_wpa"
 echo "}" >> "$_wpa"
+#
+echo "restoring system files..."
 #dhcpcd
-sudo cp $bk/dhcpcd.conf /etc/
+cp $bk/dhcpcd.conf /etc/
 #dnsmasq
-sudo cp $bk/dnsmasq.conf /etc/
+cp $bk/dnsmasq.conf /etc/
 #hostapd
 if [[ -f $bk/hostapd.conf ]]
-then sudo cp $bk/hostapd.conf /etc/hostapd/
-else sudo rm /etc/hostapd/hostapd.conf
+then cp $bk/hostapd.conf /etc/hostapd/
+else rm /etc/hostapd/hostapd.conf
 fi
 # config hostapd
-sudo systemctl stop hostapd
-sudo systemctl disable hostapd
-sudo systemctl mask hostapd
+systemctl stop hostapd
+systemctl disable hostapd
+systemctl mask hostapd
 # remove files
-sudo rm -r $bk/
-sudo rm $ap/login.data
+rm -r $bk/
+rm $ap/login.data
 # DONE - REBOOT
-sudo reboot now
+echo "COMPLETE - REBOOTING"
+reboot now
