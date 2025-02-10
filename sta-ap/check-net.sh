@@ -11,7 +11,7 @@ fi
 # variables
 dir=/usr/local/etc/subcloud/sta-ap
 ap=/var/www/html
-bk=$dir/pre-apsta-bkup
+bk=$dir/pre-sys-bkup
 #
 # chech for required files
 if [[ -f $dir/sta-ap.start ]]
