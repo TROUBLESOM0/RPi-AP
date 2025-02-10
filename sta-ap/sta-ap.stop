@@ -14,7 +14,7 @@ fi
 # variables
 dir=/usr/local/etc/subcloud/sta-ap
 req=required
-bk=$dir/pre-apsta-bkup
+bk=$dir/pre-sys-bkup
 ap=/var/www/html
 _wpa=/etc/wpa_supplicant/wpa_supplicant.conf
 SSID=$(head -n 1 $ap/login.data)
