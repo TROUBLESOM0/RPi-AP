@@ -36,13 +36,13 @@ echo "No connection to Google, trying Cloudflare"
 ping -c 1 1.1.1.1 &> /dev/null
   if [ $? -ne 0 ]
   then
-  echo "No connection to Cloudflare, trying apsta-bkup directory"
+  echo "No connection to Cloudflare, trying sys-bkup directory"
     if [[ ! -d $bk ]]
     then
     echo "Starting sta-ap"
     bash $dir/sta-ap.start
     exit 0
-    else echo "apsta-bkup exists. Wifi Login should be running"
+    else echo "sys-bkup exists. Wifi Login should be running"
       if [[ -f $ap/login.data ]]
       then
       echo "login.data exists"
