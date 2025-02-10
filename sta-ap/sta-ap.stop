@@ -88,5 +88,5 @@ systemctl mask hostapd
 rm -r $bk/
 rm $ap/login.data
 # DONE - REBOOT
-echo "COMPLETE - REBOOTING"
-reboot now
+echo "COMPLETE - REBOOTING -->Maybe Not"
+#reboot now
