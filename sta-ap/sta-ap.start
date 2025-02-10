@@ -18,8 +18,8 @@ req=required
 whtml=$dir/web/index.html
 wlogin=$dir/web/login.php
 ap=/var/www/html
-sudo mkdir $dir/pre-apsta-bkup
-bk=$dir/pre-apsta-bkup
+sudo mkdir $dir/pre-sys-bkup
+bk=$dir/pre-sys-bkup
 r=$RANDOM
 line=15
 #
@@ -96,20 +96,23 @@ chown www-data:www-data $ap/login.php
 echo "backing up wpa_supplicant"
 if [[ -f /etc/wpa_supplicant/wpa_supplicant.conf ]]
 then mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bkup
+##### TEST KEEPING WPA-SUPPLICANT FILE ################
+cp $dir/$req/default.wpa_supplicant.conf /etc/wpa_supplicant.conf
+########################################################
 else
 echo "wpa_supplicant doesn't exist... loading default..."
 cp $dir/$req/default.wpa_supplicant.conf /etc/wpa_supplicant.conf
 fi
 #dhcpcd
 echo "backing up system files..."
-cp /etc/dhcpcd.conf $bk
+cp -p /etc/dhcpcd.conf $bk
 cp $dir/$req/dhcpcd.conf /etc/
 #dnsmasq
 cp /etc/dnsmasq.conf $bk
 cp $dir/$req/dnsmasq.conf /etc/
 #hostapd
 if [[ -f /etc/hostapd/hostapd.conf ]]
-then cp /etc/hostapd/hostapd.conf $bk
+then cp -p /etc/hostapd/hostapd.conf $bk
 # making backup to add random number to SSID in hostapd.conf
 cp $dir/$req/hostapd.conf $bk/hostapd.conf.tmp
 sed -i "${line}s/$/$r/" "${bk}/hostapd.conf.tmp"
