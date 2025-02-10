@@ -126,6 +126,5 @@ systemctl stop hostapd
 systemctl unmask hostapd
 systemctl enable hostapd
 systemctl start hostapd
-# DONE - REBOOT
-echo "COMPLETE CONFIG - REBOOTING..."
-reboot now
+# DONE
+echo "BROADCASTING   subcloud-apXXX"
