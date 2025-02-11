@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# sta-ap.stop v.1
 # Configuration script to REVERT Pi Zero W from Local Access Point
 # https://gist.github.com/TROUBLESOM0/037d73d7e858ca9b37d9b27ee0591b34
 #
@@ -85,6 +86,7 @@ echo "setting network"
 systemctl stop hostapd
 systemctl disable hostapd
 systemctl mask hostapd
+systemctl restart dhcpcd
 #systemctl stop dhcpcd.service
 #systemctl stop dnsmasq
 #systemctl start dhcpcd.service
@@ -95,13 +97,13 @@ rm -r $bk/
 rm $ap/login.data
 # DONE - REBOOT
 echo "COMPLETE AP STOP"
+sleep 30
 ##### TESTING NETWORK AND RUN CHECK AGAIN IF NOT #################
-#echo "Testing internet access"
-#ping -c 1 8.8.8.8 &> /dev/null
-#if [ $? -ne 0 ]
-#then echo "Still no internet access. Running Check again"
-#bash $dir/check-net.sh
-#else echo "Internet connected. Ending"
-#fi
-#exit 0
+echo "Testing internet access"
+ping -c 1 8.8.8.8 &> /dev/null
+if [ $? -ne 0 ]
+then echo "Still no internet access. Running Check again"
 reboot now
+else echo "Internet connected. Ending"
+fi
+exit 0
