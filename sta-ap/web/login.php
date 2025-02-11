@@ -19,10 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Write the data to the file
         fwrite($file, $data);
         fclose($file);
-        echo "Login has been saved successfully! ";
-        echo "Configuring ...";
-        $output = shell_exec('bash /usr/local/etc/subcloud/sta-ap/web/run-check.sh');
-        echo "<pre>$output</pre>";
+        echo "Data has been saved successfully!";
     } else {
         echo "Error opening the file!";
     }
