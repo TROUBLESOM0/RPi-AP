@@ -10,7 +10,7 @@
 if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
-else echo "Starting STA-AP!"
+else echo "Starting AP!"
 fi
 # variables
 dir=/usr/local/etc/subcloud/sta-ap
@@ -70,6 +70,7 @@ else echo "$ap doesn't exist; apache may be missing"
 exit 1
 fi
 # moving web files
+echo "loading web files..."
 if [[ -f $ap/index.html ]]
 then cp $ap/index.html $ap/index.html.sta-ap.bkup
 else
@@ -87,6 +88,7 @@ rm $ap/login.data
 fi
 
 # Setting permissions of web files
+echo "setting permissions"
 chmod u+rw,g+r,o+r $ap/index.html
 chown www-data:www-data $ap/index.html
 chmod u+rw,g+r,o+r $ap/login.php
@@ -97,11 +99,11 @@ echo "backing up wpa_supplicant"
 if [[ -f /etc/wpa_supplicant/wpa_supplicant.conf ]]
 then mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bkup
 ##### TEST KEEPING WPA-SUPPLICANT FILE ################
-cp $dir/$req/default.wpa_supplicant.conf /etc/wpa_supplicant.conf
+cp $dir/$req/default.wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
 ########################################################
 else
 echo "wpa_supplicant doesn't exist... loading default..."
-cp $dir/$req/default.wpa_supplicant.conf /etc/wpa_supplicant.conf
+cp $dir/$req/default.wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
 fi
 #dhcpcd
 echo "backing up system files..."
@@ -122,9 +124,17 @@ sed -i "${line}s/$/$r/" "${bk}/hostapd.conf.tmp"
 mv $bk/hostapd.conf.tmp /etc/hostapd/hostapd.conf
 fi
 # config hostapd
+echo "setting network"
 systemctl stop hostapd
 systemctl unmask hostapd
 systemctl enable hostapd
 systemctl start hostapd
-# DONE
+systemctl stop dhcpcd.service
+systemctl stop dnsmasq
+systemctl start dhcpcd.service
+systemctl start dnsmasq
+# DONE - REBOOT
+echo "COMPLETE CONFIG"
 echo "BROADCASTING   subcloud-apXXX"
+exit 0
+#reboot now
