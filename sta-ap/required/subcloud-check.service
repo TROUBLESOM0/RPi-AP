@@ -13,3 +13,4 @@ Environment=DISPLAY=:0
 
 /// REMOVE THIS LINE
 /// u+rwx,g+rx,o+rx root:root
+/// install in /etc/systemd/system
