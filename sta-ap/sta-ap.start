@@ -125,14 +125,14 @@ mv $bk/hostapd.conf.tmp /etc/hostapd/hostapd.conf
 fi
 # config hostapd
 echo "setting network"
-systemctl stop hostapd
-systemctl unmask hostapd
-systemctl enable hostapd
-systemctl start hostapd
 systemctl stop dhcpcd.service
 systemctl stop dnsmasq
 systemctl start dhcpcd.service
 systemctl start dnsmasq
+systemctl stop hostapd
+systemctl unmask hostapd
+systemctl enable hostapd
+systemctl start hostapd
 # DONE - REBOOT
 echo "COMPLETE CONFIG"
 echo "BROADCASTING   subcloud-apXXX"
