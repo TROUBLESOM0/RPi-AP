@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-# sta-ap.stop v.1
 # Configuration script to REVERT Pi Zero W from Local Access Point
 # https://gist.github.com/TROUBLESOM0/037d73d7e858ca9b37d9b27ee0591b34
 #
@@ -9,7 +8,7 @@
 if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
-else echo "Stopping STA-AP!"
+else echo "Stopping AP!"
 fi
 # variables
 dir=/usr/local/etc/subcloud/sta-ap
@@ -22,7 +21,7 @@ PWD=$(sed -n '2p' $ap/login.data)
 #check if original files exist
 if test -d $bk
 then :
-else echo "The backup directory 'pre-apsta-bkup' is missing. Can't reload files"
+else echo "The backup directory is missing. Can't reload files"
 echo "Reloading WiFi Credentials..."
 fi
 if [[ ! -f $_wpa.bkup ]]
@@ -33,6 +32,7 @@ fi
 #
 # Begin script
 #
+echo "checking for required files..."
 if [[ -f $bk/dhcpcd.conf ]]
 then :
 else echo "missing dhcpcd.conf for sta-ap"
@@ -56,8 +56,8 @@ fi
 echo "restoring wpa_supplicant..."
 if [[ -f $_wpa.bkup ]]
 then sudo mv /etc/wpa_supplicant/wpa_supplicant.conf.bkup $_wpa
-chown root:root $_wpa
-chmod 600 $_wpa
+sudo chown root:root $_wpa
+sudo chmod 600 $_wpa
 else :
 fi
 echo "" >> "$_wpa"
@@ -80,17 +80,28 @@ if [[ -f $bk/hostapd.conf ]]
 then cp $bk/hostapd.conf /etc/hostapd/
 else rm /etc/hostapd/hostapd.conf
 fi
-# reconfigure system
+# config hostapd
+echo "setting network"
 systemctl stop hostapd
 systemctl disable hostapd
 systemctl mask hostapd
-systemctl stop dhcpcd.service
-systemctl stop dnsmasq
-systemctl start dhcpcd.service
-systemctl start dnsmasq
+#systemctl stop dhcpcd.service
+#systemctl stop dnsmasq
+#systemctl start dhcpcd.service
+#systemctl start dnsmasq
 # remove files
+echo "removing backup & login.data"
 rm -r $bk/
 rm $ap/login.data
 # DONE - REBOOT
-echo "COMPLETE - REBOOTING -->Maybe Not"
-#reboot now
+echo "COMPLETE AP STOP"
+##### TESTING NETWORK AND RUN CHECK AGAIN IF NOT #################
+#echo "Testing internet access"
+#ping -c 1 8.8.8.8 &> /dev/null
+#if [ $? -ne 0 ]
+#then echo "Still no internet access. Running Check again"
+#bash $dir/check-net.sh
+#else echo "Internet connected. Ending"
+#fi
+#exit 0
+reboot now
