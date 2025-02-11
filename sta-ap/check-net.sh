@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-# check-net.sh v.1
 # Check network connection by pinging Google or Cloudflare
 #
 # Checking for root
@@ -8,6 +7,16 @@ if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
 fi
+#logs
+if [[ ! -f /usr/local/etc/subcloud/sta-ap/log ]]
+then
+touch /usr/local/etc/subcloud/sta-ap/log
+echo "$(date)---First Run check-net.sh---" >> /usr/local/etc/subcloud/sta-ap/log
+else echo "" >> /usr/local/etc/subcloud/sta-ap/log
+echo "$(date)---RUNNING CHECK-NET---" >> /usr/local/etc/subcloud/sta-ap/log
+fi
+exec > >(tee -a /usr/local/etc/subcloud/sta-ap/log) 2>&1
+#
 # variables
 dir=/usr/local/etc/subcloud/sta-ap
 ap=/var/www/html
@@ -36,13 +45,13 @@ echo "No connection to Google, trying Cloudflare"
 ping -c 1 1.1.1.1 &> /dev/null
   if [ $? -ne 0 ]
   then
-  echo "No connection to Cloudflare, trying sys-bkup directory"
-    if [[ ! -d $bk ]]
+  echo "No connection to Cloudflare, trying hostap"
+    if [[ ! -f /etc/hostapd/hostapd.conf ]]
     then
-    echo "Starting sta-ap"
+    echo "hostap doesn't exist."
     bash $dir/sta-ap.start
     exit 0
-    else echo "sys-bkup exists. Wifi Login should be running"
+    else echo "hostap exists. Wifi Login should be running"
       if [[ -f $ap/login.data ]]
       then
       echo "login.data exists"
@@ -54,23 +63,26 @@ ping -c 1 1.1.1.1 &> /dev/null
     fi
   # If network is connected
   else echo "successful ping to Cloudflare."
-  echo "checking if need to run sta-ap.stop"
+  echo "checking if need to stop AP"
     if [[ -f $ap/login.data ]]
     then
     echo "login.data exists"
     bash $dir/sta-ap.stop
     exit 0
-    else exit 0
+    else echo "login.data missing. Waiting for input..."
+    exit 0
     fi
   fi
 else echo "successful ping to Google."
-echo "checking if need to run sta-ap.stop"
+echo "checking if need to run AP"
   if [[ -f $ap/login.data ]]
   then
   echo "login.data exists"
   bash $dir/sta-ap.stop
   exit 0
-  else exit 0
+  else echo "login.data absent. Waiting for input..."
+  exit 0
   fi
 fi
+echo "Hold My Beer"
 exit 0
