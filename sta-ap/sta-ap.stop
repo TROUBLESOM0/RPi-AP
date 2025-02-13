@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-# sta-ap.stop v.1
 # Configuration script to REVERT Pi Zero W from Local Access Point
 # https://gist.github.com/TROUBLESOM0/037d73d7e858ca9b37d9b27ee0591b34
 #
