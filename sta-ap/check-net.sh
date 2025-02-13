@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-# check-net.sh v.1
 # Check network connection by pinging Google or Cloudflare
 #
 # Checking for root
