@@ -11,7 +11,7 @@ exit 1
 else echo "Stopping AP!"
 fi
 # variables
-dir=/usr/local/etc/subcloud/sta-ap
+dir=/usr/local/etc/lilypin/sta-ap
 req=required
 bk=$dir/pre-sys-bkup
 ap=/var/www/html
