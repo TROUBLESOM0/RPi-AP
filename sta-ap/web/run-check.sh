@@ -4,6 +4,6 @@
 # requires root:www-data u+rw,g+rx,o+r
 #
 #
-dir=/usr/local/etc/subcloud/sta-ap
+dir=/usr/local/etc/lilypin/sta-ap
 #
 sudo bash $dir/check-net.sh
