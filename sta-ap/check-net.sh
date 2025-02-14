@@ -8,17 +8,17 @@ then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
 fi
 #logs
-if [[ ! -f /usr/local/etc/subcloud/sta-ap/log ]]
+if [[ ! -f /usr/local/etc/lilypin/sta-ap/log ]]
 then
-touch /usr/local/etc/subcloud/sta-ap/log
-echo "$(date)---First Run check-net.sh---" >> /usr/local/etc/subcloud/sta-ap/log
-else echo "" >> /usr/local/etc/subcloud/sta-ap/log
-echo "$(date)---RUNNING CHECK-NET---" >> /usr/local/etc/subcloud/sta-ap/log
+touch /usr/local/etc/lilypin/sta-ap/log
+echo "$(date)---First Run check-net.sh---" >> /usr/local/etc/lilypin/sta-ap/log
+else echo "" >> /usr/local/etc/lilypin/sta-ap/log
+echo "$(date)---RUNNING CHECK-NET---" >> /usr/local/etc/lilypin/sta-ap/log
 fi
-exec > >(tee -a /usr/local/etc/subcloud/sta-ap/log) 2>&1
+exec > >(tee -a /usr/local/etc/lilypin/sta-ap/log) 2>&1
 #
 # variables
-dir=/usr/local/etc/subcloud/sta-ap
+dir=/usr/local/etc/lilypin/sta-ap
 ap=/var/www/html
 bk=$dir/pre-sys-bkup
 #
