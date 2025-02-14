@@ -35,5 +35,5 @@ Steps to perform:
 <br>
 
 Once files are replaced and hostapd is unmasked & restarted, Perform reboot.<br>
-There should be an "Open" network named <ins> LILYPIN-$RANDOMNUMBER </ins><br>
+There should be an "Open" network named <ins> LILYPIN-xxx </ins><br>
 ( this can be changed in the "hostapd.conf" file )
