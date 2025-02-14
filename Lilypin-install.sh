@@ -11,6 +11,15 @@ then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
 fi
 #
+#
+# variables
+rootdir=/usr/local/etc/lilypin
+stadir=/usr/local/etc/lilypin/sta-ap
+req=required
+whtml=$stadir/web/index.html
+wlogin=$stadir/web/login.php
+ap=/var/www/html
+
 ##############################
 ###   ASK_INSTALLAPACHE2   ###
 ##############################
@@ -44,6 +53,42 @@ exit 1
 fi
 }
 #
+###########################
+###   ASK_LOADMOD-PHP   ###
+###########################
+ask_Loadmod-php () {
+PHP_VERSION=$(php -v | head -n 1 | awk '{print $2}')
+# Identify the module name based on the PHP version
+MODULE_NAME="php${PHP_VERSION}"
+# Check if the module exists
+if apache2ctl -M | grep -q "${MODULE_NAME}_module"
+then echo "PHP module ${MODULE_NAME} is already enabled."
+else
+echo "Enabling ${MODULE_NAME} module for Apache2..."    
+# Enable the PHP module for Apache2
+sudo a2enmod "${MODULE_NAME}"    
+# Restart Apache to apply the changes
+sudo systemctl restart apache2
+echo "${MODULE_NAME} module has been enabled and Apache2 has been restarted."
+fi
+}
+#
+##################
+###   ASK_DL   ###
+##################
+echo "Downloading files..."
+sudo wget https://github.com/TROUBLESOM0/LilyPin/archive/refs/heads/main.zip /usr/local/etc/
+if [[ -f main.zip ]]
+then :
+else echo "Download failed"
+exit 1
+fi
+unzip -qq -o /usr/local/etc/main.zip
+sudo mv /usr/local/etc/LilyPin-main/ /usr/local/etc/lilypin
+sudo rm /usr/local/etc/main.zip
+sudo rm $rootdir/Lilypin-install.sh
+sudo bash $stadir/sta-ap.start
+
 ############################
 #      Initial Checks      #
 ############################
@@ -61,3 +106,16 @@ then :
 else
 ask_Installmod-php
 fi
+ask_Loadmod-php
+#############################################
+#              Begin Script                 #
+#############################################
+echo "Starting Installation..."
+echo "Checking for previous installation"
+if test -d $rootdir
+then rm -r $rootdir
+echo "removed previous installation"
+else echo "start initial install"
+ask_DL
+echo "Installation Complete"
+exit 0
