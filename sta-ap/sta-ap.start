@@ -13,7 +13,7 @@ exit 1
 else echo "Starting AP!"
 fi
 # variables
-dir=/usr/local/etc/subcloud/sta-ap
+dir=/usr/local/etc/lilypin/sta-ap
 req=required
 whtml=$dir/web/index.html
 wlogin=$dir/web/login.php
@@ -135,6 +135,6 @@ systemctl enable hostapd
 systemctl start hostapd
 # DONE - REBOOT
 echo "COMPLETE CONFIG"
-echo "BROADCASTING   subcloud-apXXX"
+echo "BROADCASTING   lilypin-XXX"
 exit 0
 #reboot now
