@@ -142,6 +142,7 @@ sleep 1
 echo "enabling service..."
 systemctl enable $service
 # check for errors on service
+echo "checking for errors..."
 ERRORS=$(sudo journalctl -u "$service" -p err --since "1 hour ago" --no-pager)
   if [[ -z "$ERRORS" ]]
   then echo "service enabled"
