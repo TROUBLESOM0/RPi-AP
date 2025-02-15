@@ -135,7 +135,7 @@ then echo -e "${Error}ERROR${Off} $service is missing!"
 exit 1
 else
 chown root:root $stadir/$req/$service
-chmod u+rwx,g+rx,o+rx $stadir/$req/$service
+chmod u+rwx,g+rx,o+r $stadir/$req/$service
 ln -s $stadir/$req/$service /etc/systemd/service/$service
 echo "enabling service..."
 systemctl enable $service
