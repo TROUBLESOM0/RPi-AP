@@ -190,13 +190,14 @@ echo "enabling service..."
 systemctl enable $service
 # check for errors on service
 echo "checking for errors..."
-ERRORS=$(sudo journalctl -u "$service" -p err --since "1 hour ago" --no-pager)
-  if [[ -z "$ERRORS" ]]
-  then echo "service enabled"
+  if systemctl is-enabled "$service" &>/dev/null
+  then echo "service is enabled"
   else
-  echo "There was an issue configuring the service '$service'! Need to figure an auto way to handle this"
+  echo "There was an issue configuring the service '$service'!"
+  echo "Run Uninstall script"
+  echo "Then try re-installing"
+  exit 1
   fi
-
 fi
 }
 #
