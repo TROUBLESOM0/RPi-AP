@@ -111,7 +111,7 @@ fi
 ##################
 ask_DL () {
 echo "Downloading files..."
-wget -q $gitLink ~/
+wget -q $gitLink /usr/local/etc/
 
 if [[ -f main.zip ]]
 then :
@@ -122,7 +122,7 @@ fi
 unzip -qq -o /usr/local/etc/main.zip
 mv /usr/local/etc/LilyPin-main/ /usr/local/etc/lilypin
 rm /usr/local/etc/main.zip
-rm $rootdir/Lilypin-install.sh
+#rm $rootdir/Lilypin-install.sh
 }
 #
 ##############################
