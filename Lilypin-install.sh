@@ -85,7 +85,7 @@ fi
 }
 #
 ###########################
-###   ASK_LOADMOD-PHP   ###
+###   ASK_LOADMOD-PHP   ###   THIS ISN'T WORKING RIGHT
 ###########################
 ask_Loadmod-php () {
 PHP_VERSION=$(php -v | head -n 1 | awk '{print $2}')
