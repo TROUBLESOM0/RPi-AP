@@ -119,7 +119,7 @@ else echo "Download failed"
 exit 1
 fi
 
-unzip -qq -o /usr/local/etc/main.zip
+unzip -qq -o /usr/local/etc/main.zip -d /usr/local/etc/
 mv /usr/local/etc/LilyPin-main/ /usr/local/etc/lilypin
 rm /usr/local/etc/main.zip
 #rm $rootdir/Lilypin-install.sh
