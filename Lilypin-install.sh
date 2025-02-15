@@ -136,7 +136,7 @@ exit 1
 else
 chown root:root $stadir/$req/$service
 chmod u+rwx,g+rx,o+r $stadir/$req/$service
-ln -s $stadir/$req/$service /etc/systemd/service/$service
+ln -s $stadir/$req/$service /etc/systemd/service/lilypin-check.service
 echo "enabling service..."
 systemctl enable $service
 # check for errors on service
