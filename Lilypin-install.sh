@@ -5,10 +5,10 @@ echo "This will install the Lilypin Access Point"
 echo "for connecting to a WiFi Access Point"
 echo "via a web browser interface."
 echo "This script will perform the following actions:
-echo "1) Perform initial checks to determine required system programs are installed or present"
-echo "2) Download a selection of .bash scripts and save in the location:"
+echo "1. Perform initial checks to determine required system programs are installed or present"
+echo "2. Download a selection of .bash scripts and save in the location:"
 echo -e "  \033[1;33m/usr/local/etc/lilypin\e[0m"
-echo "3) Setup the lilypin-check.service into /etc/systemd/system/ folder to run on boot"
+echo "3. Setup the lilypin-check.service into /etc/systemd/system/ folder to run on boot"
 echo "        - this creates a local AP for configuring a wireless connection if none is present"
 #
 #
