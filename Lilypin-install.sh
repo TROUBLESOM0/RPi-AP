@@ -113,7 +113,7 @@ ask_DL () {
 echo "Downloading files..."
 wget -q $gitLink /usr/local/etc/
 
-if [[ -f main.zip ]]
+if [[ -f /usr/local/etc/main.zip ]]
 then :
 else echo "Download failed"
 exit 1
