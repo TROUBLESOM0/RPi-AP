@@ -10,7 +10,3 @@ Type=oneshot
 ExecStart=/usr/bin/sudo /usr/local/etc/lilypin/sta-ap/c_start.sh
 User=root
 Environment=DISPLAY=:0
-
-/// REMOVE THIS LINE
-/// u+rwx,g+rx,o+rx root:root
-/// install in /etc/systemd/system
