@@ -111,7 +111,7 @@ fi
 ##################
 ask_DL () {
 echo "Downloading files..."
-wget -q $gitLink /usr/local/etc/
+wget -q $gitLink -P /usr/local/etc/
 
 if [[ -f /usr/local/etc/main.zip ]]
 then :
