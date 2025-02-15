@@ -27,7 +27,7 @@ req=required
 whtml=$stadir/web/index.html
 wlogin=$stadir/web/login.php
 ap=/var/www/html
-gitLink="https://app.box.com/s/za9w9hlqpax5e8rzx4w22uh0ke1tqmcz"
+gitLink="https://github.com/TROUBLESOM0/LilyPin/archive/refs/heads/main.zip"
 service=lilypin-check.service
 
 ############################
@@ -35,7 +35,7 @@ service=lilypin-check.service
 ############################
 ask_Installunzip () {
 echo "Installing unzip"
-sudo apt install unzip -y -qq > /dev/null
+apt install unzip -y -qq > /dev/null
 sleep 1
 
 if type unzip &>/dev/null
@@ -53,7 +53,7 @@ fi
 ask_Installapache2 () {
 echo "Installing apache2"
 sleep 1
-sudo apt install apache2 -y -qq > /dev/null
+apt install apache2 -y -qq > /dev/null
 sleep 1
 
 if type apache2 &>/dev/null
@@ -71,7 +71,7 @@ fi
 ask_Installmod-php () {
 echo "Installing libapache2-mod-php"
 sleep 1
-sudo apt install libapache2-mod-php -y -qq > /dev/null
+apt install libapache2-mod-php -y -qq > /dev/null
 sleep 1
 dpkg -l | grep -qw libapache2-mod-php
 
@@ -97,9 +97,9 @@ if apache2ctl -M | grep -q "${MODULE_NAME}_module"
 then echo "PHP module ${MODULE_NAME} is already enabled."
 else
 echo "Enabling ${MODULE_NAME} module for Apache2..."    
-sudo a2enmod "${MODULE_NAME}"    
+a2enmod "${MODULE_NAME}"    
 echo "Restarting Apache..."
-sudo systemctl restart apache2
+systemctl restart apache2
 sleep 1
 echo "${MODULE_NAME} module has been enabled and Apache2 has been restarted."
 fi
@@ -110,7 +110,7 @@ fi
 ###   ASK_DL   ###
 ##################
 echo "Downloading files..."
-sudo wget -q $gitLink
+wget -q $gitLink ~/
 
 if [[ -f main.zip ]]
 then :
@@ -119,9 +119,9 @@ exit 1
 fi
 
 unzip -qq -o /usr/local/etc/main.zip
-sudo mv /usr/local/etc/LilyPin-main/ /usr/local/etc/lilypin
-sudo rm /usr/local/etc/main.zip
-sudo rm $rootdir/Lilypin-install.sh
+mv /usr/local/etc/LilyPin-main/ /usr/local/etc/lilypin
+rm /usr/local/etc/main.zip
+rm $rootdir/Lilypin-install.sh
 #
 ##############################
 ###   ASK_INSTALL-SERVICE   ###
@@ -132,7 +132,6 @@ if [[ ! -f $stadir/$req/$service ]]
 then echo -e "${Error}ERROR${Off} $service is missing!"
 exit 1
 else
-#############################################  computer messed up need to double-check all below this with actual values  ##########################
 chown root:root $stadir/$req/$service
 chmod u+rwx,g+rx,o+rx $stadir/$req/$service
 ln -s $stadir/$req/$service /etc/systemd/service/$service
@@ -147,7 +146,6 @@ ERRORS=$(sudo journalctl -u "$service" -p err --since "1 hour ago" --no-pager)
   fi
 
 fi
-
 }
 #
 ############################
@@ -198,5 +196,5 @@ echo "Configuring service in systemd..."
 ask_Install-service
 echo "Should be ready for Reboot now"
 echo "REBOOTING"
-reboot now
+#reboot now
 exit 0
