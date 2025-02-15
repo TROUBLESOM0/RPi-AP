@@ -109,6 +109,7 @@ fi
 ##################
 ###   ASK_DL   ###
 ##################
+ask_DL () {
 echo "Downloading files..."
 wget -q $gitLink ~/
 
@@ -122,6 +123,7 @@ unzip -qq -o /usr/local/etc/main.zip
 mv /usr/local/etc/LilyPin-main/ /usr/local/etc/lilypin
 rm /usr/local/etc/main.zip
 rm $rootdir/Lilypin-install.sh
+}
 #
 ##############################
 ###   ASK_INSTALL-SERVICE   ###
