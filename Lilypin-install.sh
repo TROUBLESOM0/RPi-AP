@@ -47,6 +47,23 @@ fi
 
 }
 # 
+############################
+###   ASK_INSTALLHOSTAPD   ###
+############################
+ask_Installhostapd () {
+echo "Installing hostapd"
+apt install hostapd -y -qq > /dev/null
+sleep 1
+
+if type hostapd &>/dev/null
+then :
+else
+echo "hostapd installation failed. Try installing manually with sudo apt install hostapd"
+exit 1
+fi
+
+}
+# 
 ##############################
 ###   ASK_INSTALLAPACHE2   ###
 ##############################
@@ -193,6 +210,15 @@ else
 echo "ERROR unzip is not installed"
 ask_Installunzip
 echo "unzip install complete"
+fi
+
+# check if hostapd is installed
+if type hostapd &>/dev/null
+then : # continues script
+else
+echo "ERROR hostapd is not installed"
+ask_Installhostapd
+echo "hostapd install complete"
 fi
 
 # check if apache2 is installed
