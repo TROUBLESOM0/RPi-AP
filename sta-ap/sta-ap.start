@@ -12,7 +12,9 @@ then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
 else echo "Starting AP!"
 fi
-# variables
+#
+### VARIABLES ###
+#################
 dir=/usr/local/etc/lilypin/sta-ap
 req=required
 whtml=$dir/web/index.html
