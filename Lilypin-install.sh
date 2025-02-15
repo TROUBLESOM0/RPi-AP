@@ -123,6 +123,36 @@ unzip -qq -o /usr/local/etc/main.zip -d /usr/local/etc/
 mv /usr/local/etc/LilyPin-main/ /usr/local/etc/lilypin
 rm /usr/local/etc/main.zip
 #rm $rootdir/Lilypin-install.sh
+
+if [[ -f $stadir/c_start.sh ]]
+then :
+else echo "c_start.sh missing"
+exit 1
+fi
+
+if [[ -f $stadir/check-net.sh ]]
+then :
+else echo "check-net.sh missing"
+exit 1
+fi
+
+if [[ -f $stadir/sta-ap.start ]]
+then :
+else echo "sta-ap.start missing"
+exit 1
+fi
+
+if [[ -f $stadir/sta-ap.stop ]]
+then :
+else echo "sta-ap.stop missing"
+exit 1
+fi
+
+chmod u+x,g+x $stadir/c_start.sh
+chmod u+x,g+x $stadir/check-net.sh
+chmod u+x,g+x $stadir/sta-ap.start
+chmod u+x,g+x $stadir/sta-ap.stop
+
 }
 #
 ##############################
