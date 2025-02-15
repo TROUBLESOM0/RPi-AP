@@ -19,7 +19,7 @@ exit 1
 fi
 #
 #
-### variables ###
+### VARIABLES ###
 #################
 rootdir=/usr/local/etc/lilypin
 stadir=/usr/local/etc/lilypin/sta-ap
