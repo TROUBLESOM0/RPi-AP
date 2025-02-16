@@ -63,6 +63,19 @@ s3 () { sleep 3; }
 s4 () { sleep 4; }
 s5 () { sleep 5; }
 #
+#######################
+###   ASK_SERVICE   ###
+#######################
+ask_Service () {
+if [[ -f /etc/systemd/system/lilypin-check.service ]]
+then systemctl disable lilypin-check.service
+  if [[ -f /etc/systemd/system/lilypin-check.service ]]
+  then echo "Lilypin service removed"
+  else echo "Unable to remove service.  Try manually with sudo systemctl disable lilypin-check.service"
+  fi
+else echo "unable to locat lilypin-check.service"
+fi
+#
 #####################
 ###   ASK_WPA   ###
 #####################
@@ -94,6 +107,7 @@ exit 0
 esac
 echo "WPA_Supplicant restored"
 fi
+}
 #
 #############################
 ###     RESTORE_APACHE    ###
@@ -204,6 +218,8 @@ s
 ask_Apache
 s
 ask_Wpa
+s
+ask_Service
 s
 break
 ;;
