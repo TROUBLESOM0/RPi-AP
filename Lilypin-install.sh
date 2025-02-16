@@ -108,18 +108,20 @@ ask_Loadmod-php () {
 PHP_VERSION=$(php -v | head -n 1 | awk '{print $2}' | cut -d '.' -f1-2)
 echo "Identifying the module name based on the PHP version"
 MODULE_NAME="php${PHP_VERSION}"
-echo "Checking if the module exists"
+#echo "Checking if the module exists"
+echo "PHP module should have been automatically enabled during libapache2-mod-php installation"
+echo "*********** Check and see ***************"
 
-if apache2ctl -M | grep -q "${MODULE_NAME}_module"
-then echo "PHP module ${MODULE_NAME} is already enabled."
-else
-echo "Enabling ${MODULE_NAME} module for Apache2..."    
-a2enmod "${MODULE_NAME}"    
-echo "Restarting Apache..."
-systemctl restart apache2
-sleep 1
-echo "${MODULE_NAME} module has been enabled and Apache2 has been restarted."
-fi
+#if apache2ctl -M | grep -q "${MODULE_NAME}_module"
+#then echo "PHP module ${MODULE_NAME} is already enabled."
+#else
+#echo "Enabling ${MODULE_NAME} module for Apache2..."    
+#a2enmod "${MODULE_NAME}"    
+#echo "Restarting Apache..."
+#systemctl restart apache2
+#sleep 1
+#echo "${MODULE_NAME} module has been enabled and Apache2 has been restarted."
+#fi
 
 }
 #
