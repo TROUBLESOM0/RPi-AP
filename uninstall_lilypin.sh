@@ -63,6 +63,61 @@ s3 () { sleep 3; }
 s4 () { sleep 4; }
 s5 () { sleep 5; }
 #
+########################
+###    ASK_LILYPIN   ###
+########################
+ask_Lilypin () {
+if [[ -d $rootdir ]]
+then rm -r $rootdir
+echo "Lilypin files removed"
+else echo "Unable to locat Lilypin directory"
+echo "No Lilypin Files Removed"
+fi
+#
+########################
+###    ASK_HOSTAPD   ###
+########################
+ask_Hostapd () {
+if [[ -f $bk/hostapd.conf ]]
+then mv $bk/hostapd.conf /etc/hostapd/
+echo "hostapd.conf restored from backup"
+else rm /etc/hostapd/hostapd.conf
+echo "hostapd.conf removed"
+fi
+}
+#
+########################
+###    ASK_DNSMASQ   ###
+########################
+ask_Dnsmasq () {
+if [[ -f $ff ]]
+then :
+else echo "missing dnsmasq.conf for sta-ap"
+echo "no change made"
+fi
+
+cp $ff $f
+chown root:root $f
+chmod u+rw,g+r,o+r $f
+echo "dhcpcd.conf restored from backup"
+}
+#
+#######################
+###    ASK_DHCPCD   ###
+#######################
+ask_Dhcpcd () {
+if [[ -f $gg ]]
+then :
+else echo "missing dhcpcd.conf for sta-ap"
+echo "no change made"
+fi
+
+cp $gg $g
+chown root:netdev $g
+chmod u+rw,g+rw,o+r $g
+echo "dhcpcd.conf restored from backup"
+}
+#
 #######################
 ###   ASK_SERVICE   ###
 #######################
@@ -75,6 +130,7 @@ then systemctl disable lilypin-check.service
   fi
 else echo "unable to locat lilypin-check.service"
 fi
+}
 #
 #####################
 ###   ASK_WPA   ###
@@ -105,7 +161,7 @@ s
 exit 0
 ;;
 esac
-echo "WPA_Supplicant restored"
+echo "WPA_Supplicant restored from backup"
 fi
 }
 #
@@ -121,7 +177,7 @@ then echo "checking backups"
   mv $ee $e
   chown www-data:www-data $e
   chmod 644 $e
-  echo "index.html restored"
+  echo "index.html restored from backup"
   else echo "no backup for index.html"
   echo "no change made"
   fi
@@ -129,7 +185,7 @@ then echo "checking backups"
   if [[ -f $bb ]]
   then
   mv $bb $b
-  echo "login.php restored"
+  echo "login.php restored from backup"
   chown www-data:www-data $b
   echo "no permission changes made"
   else echo "no backup for login.php"
@@ -221,6 +277,22 @@ ask_Wpa
 s
 ask_Service
 s
+ask_Dhcpcd
+s
+ask_Dnsmasq
+s
+ask_Hostapd
+s
+echo "Restarting Network"
+systemctl stop hostapd
+systemctl disable hostapd
+systemctl mask hostapd
+systemctl restart dhcpcd
+s
+ask_Lilypin
+s
+echo "Lilypin uninstall complete"
+echo "May need to reboot in order to complete the network reconfiguration"
 break
 ;;
 [nN][oO]|[nN]
