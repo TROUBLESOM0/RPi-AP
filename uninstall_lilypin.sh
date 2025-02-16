@@ -73,6 +73,7 @@ echo "Lilypin files removed"
 else echo "Unable to locat Lilypin directory"
 echo "No Lilypin Files Removed"
 fi
+}
 #
 ########################
 ###    ASK_HOSTAPD   ###
@@ -195,6 +196,7 @@ then echo "checking backups"
 else
 echo "Unable to determine if apache2 is installed"
 fi
+
 }
 #
 #############################
@@ -216,7 +218,7 @@ if type apache2 &>/dev/null
 then apt purge apache2 -y -qq > /dev/null
 s
   if [[ -d /var/www ]]
-  rm -r /var/www
+  then rm -r /var/www
   else :
   fi
 apt autoremove -y -qq > /dev/null
@@ -226,6 +228,12 @@ apt autoremove -y -qq > /dev/null
   fi
 else
 echo "Unable to determine if apache2 is installed."
+fi
+
+if [[ -d /etc/apache2 ]]
+then echo "Removing leftover apache directory"
+rm -r /etc/apache2
+else :
 fi
 
 }
@@ -295,14 +303,14 @@ echo "Lilypin uninstall complete"
 echo "May need to reboot in order to complete the network reconfiguration"
 break
 ;;
-[nN][oO]|[nN]
+[nN][oO]|[nN])
 echo "Cancelled"
 break
 ;;
 *)
 echo "Must enter (Y/n)"
 s
-exit 0
+exit 1
 ;;
 esac
 done
@@ -323,4 +331,5 @@ fi
 ask_Start
 
 echo "ENDING"
+exit 0
 #########################################
