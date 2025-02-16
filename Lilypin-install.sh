@@ -105,7 +105,7 @@ fi
 ###   ASK_LOADMOD-PHP   ###   THIS ISN'T WORKING RIGHT
 ###########################
 ask_Loadmod-php () {
-PHP_VERSION=$(php -v | head -n 1 | awk '{print $2}')
+PHP_VERSION=$(php -v | head -n 1 | awk '{print $2}' | cut -d '.' -f1-2)
 echo "Identifying the module name based on the PHP version"
 MODULE_NAME="php${PHP_VERSION}"
 echo "Checking if the module exists"
