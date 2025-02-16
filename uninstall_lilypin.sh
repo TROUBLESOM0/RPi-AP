@@ -71,7 +71,28 @@ if [[ -f $dd ]]
 then echo "Restoring wpa_supplicant"
 mv $dd $d
 else echo "Unable to locate backup for wpa_supplicant"
-echo "no change made"
+read -r -p "Do you want to load a default wpa file? Wifi may not work without it.  [Y/n]" ask_wpa_input
+case $ask_wpa_input in
+[yY][eE][sS]|[yY])
+echo "Loading default wpa_supplicant"
+  if [[ -f $stadir/$req/default.wpa_supplicant.conf ]]
+  then cp $stadir/$req/default.wpa_supplicant.conf $d
+  else echo "unable to locate default wpa_supplicant"
+  echo "no change made"
+  fi
+break
+;;
+[nN][oO]|[nN])
+echo "No change made to $d"
+break
+;;
+*)
+echo "Must enter (Y or N)"
+s
+exit 0
+;;
+esac
+echo "WPA_Supplicant restored"
 fi
 #
 #############################
@@ -102,7 +123,7 @@ then echo "checking backups"
   fi
 
 else
-echo "You Silly Sally, apache isn't even installed"
+echo "Unable to determine if apache2 is installed"
 fi
 }
 #
@@ -134,7 +155,7 @@ apt autoremove -y -qq > /dev/null
   else echo "apache removed"
   fi
 else
-echo "You Silly Sally, apache isn't even installed"
+echo "Unable to determine if apache2 is installed."
 fi
 
 }
