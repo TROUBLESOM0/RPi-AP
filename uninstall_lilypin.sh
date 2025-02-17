@@ -82,8 +82,8 @@ ask_Hostapd () {
 if [[ -f $bk/hostapd.conf ]]
 then mv $bk/hostapd.conf /etc/hostapd/
 echo "hostapd.conf restored from backup"
-else rm /etc/hostapd/hostapd.conf
-echo "hostapd.conf removed"
+else apt purge hostapd -y -qq > /dev/null
+echo "Uninstalled hostapd"
 fi
 }
 #
@@ -100,7 +100,7 @@ fi
 cp $ff $f
 chown root:root $f
 chmod u+rw,g+r,o+r $f
-echo "dhcpcd.conf restored from backup"
+echo "dnsmasq.conf restored from backup"
 }
 #
 #######################
@@ -224,7 +224,7 @@ s
 apt autoremove -y -qq > /dev/null
   if type apache2 &>/dev/null
   then echo "error removing apache2. Try removing manually with sudo apt purge apache2"
-  else echo "apache removed"
+  else echo "Uninstalled apache2"
   fi
 else
 echo "Unable to determine if apache2 is installed."
@@ -232,7 +232,7 @@ fi
 
 if [[ -d /etc/apache2 ]]
 then echo "Removing leftover apache directory"
-rm -r /etc/apache2
+rm -r /etc/apache2/
 else :
 fi
 
