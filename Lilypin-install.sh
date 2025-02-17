@@ -177,7 +177,6 @@ chmod u+x,g+x $stadir/c_start.sh
 chmod u+x,g+x $stadir/check-net.sh
 chmod u+x,g+x $stadir/sta-ap.start
 chmod u+x,g+x $stadir/sta-ap.stop
-chmod u+rwx,g+rx,o+r $rootdir/uninstall_lilypin.sh
 
 }
 #
@@ -211,7 +210,7 @@ fi
 }
 #
 ##############################
-###   ASK_UNINSTALL-sSET   ###
+###   ASK_UNINSTALL-SET   ###
 ##############################
 ash_Uninstall-set () {
 if [[ ! -f $rootdir/uninstall_lilypin.sh ]]
