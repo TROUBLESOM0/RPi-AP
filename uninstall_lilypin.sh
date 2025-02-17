@@ -45,6 +45,9 @@ d=$_wpa/wpa_supplicant.conf
 e=$ap/index.html
 f=/etc/dnsmasq.conf
 g=/etc/dhcpcd.conf
+h=libapache2-mod-php7.4
+j=apache2-doc
+k=apache2-bin
 #
 ### Variables for Restoring ###
 bk=$dir/pre-sys-bkup
@@ -67,33 +70,40 @@ s5 () { sleep 5; }
 ###    ASK_LILYPIN   ###
 ########################
 ask_Lilypin () {
+
 if [[ -d $rootdir ]]
 then rm -r $rootdir
 echo "Lilypin files removed"
 else echo "Unable to locat Lilypin directory"
 echo "No Lilypin Files Removed"
 fi
+
 }
 #
 ########################
 ###    ASK_HOSTAPD   ###
 ########################
 ask_Hostapd () {
+
 if [[ -f $bk/hostapd.conf ]]
 then mv $bk/hostapd.conf /etc/hostapd/
 echo "hostapd.conf restored from backup"
 else apt purge hostapd -y -qq > /dev/null
+  
   if [[ -d /etc/hostapd ]]
   then rm -r /etc/hostapd
   fi
+
 echo "Uninstalled hostapd"
 fi
+
 }
 #
 ########################
 ###    ASK_DNSMASQ   ###
 ########################
 ask_Dnsmasq () {
+
 if [[ -f $ff ]]
 then :
 else echo "missing dnsmasq.conf for sta-ap"
@@ -110,6 +120,7 @@ echo "dnsmasq.conf restored from backup"
 ###    ASK_DHCPCD   ###
 #######################
 ask_Dhcpcd () {
+
 if [[ -f $gg ]]
 then :
 else echo "missing dhcpcd.conf for sta-ap"
@@ -126,20 +137,25 @@ echo "dhcpcd.conf restored from backup"
 ###   ASK_SERVICE   ###
 #######################
 ask_Service () {
+
 if [[ -f /etc/systemd/system/lilypin-check.service ]]
 then systemctl disable lilypin-check.service
+  
   if [[ -f /etc/systemd/system/lilypin-check.service ]]
   then echo "Lilypin service removed"
   else echo "Unable to remove service.  Try manually with sudo systemctl disable lilypin-check.service"
   fi
+
 else echo "unable to locat lilypin-check.service"
 fi
+
 }
 #
 #####################
 ###   ASK_WPA   ###
 #####################
 ask_Wpa () {
+
 if [[ -f $dd ]]
 then echo "Restoring wpa_supplicant"
 mv $dd $d
@@ -148,11 +164,13 @@ read -r -p "Do you want to load a default wpa file? Wifi may not work without it
 case $ask_wpa_input in
 [yY][eE][sS]|[yY])
 echo "Loading default wpa_supplicant"
+  
   if [[ -f $stadir/$req/default.wpa_supplicant.conf ]]
   then cp $stadir/$req/default.wpa_supplicant.conf $d
   else echo "unable to locate default wpa_supplicant"
   echo "no change made"
   fi
+
 break
 ;;
 [nN][oO]|[nN])
@@ -167,12 +185,14 @@ exit 0
 esac
 echo "WPA_Supplicant restored from backup"
 fi
+
 }
 #
 #############################
 ###     RESTORE_APACHE    ###
 #############################
 restore_apache () {
+
 if type apache2 &>/dev/null
 then echo "checking backups"
 
@@ -206,37 +226,69 @@ fi
 ###    UNINSTALL_APACHE   ###
 #############################
 uninstall_apache () {
-if dpkg -l | grep -qw libapache2-mod-php
-then apt purge libapache2-mod-php -y -qq > /dev/null
-apt autoremove -y -qq > /dev/null
-s
-  if dpkg -l | grep -qw libapache2-mod-php
-  then echo "There was an issue removing libapache2-mod-php.  Try removing manually with sudo apt purge libapache2-mod-php"
-  else echo "libapache2-mod-php uninstalled"
-  fi
-else "Unable to verify that libapache2-mod-php is installed."
-fi
 
-if type apache2 &>/dev/null
+if dpkg -l | grep -qw apache2
 then apt purge apache2 -y -qq > /dev/null
-s
-  if [[ -d /var/www ]]
-  then rm -r /var/www
-  else :
-  fi
 apt autoremove -y -qq > /dev/null
+s
+
   if type apache2 &>/dev/null
   then echo "error removing apache2. Try removing manually with sudo apt purge apache2"
   else echo "Uninstalled apache2"
   fi
+
 else
-echo "Unable to determine if apache2 is installed."
+echo "Unable to determine if the apache2 package is installed or not, but will continue processing."
 fi
 
 if [[ -d /etc/apache2 ]]
 then echo "Removing leftover apache directory"
 rm -r /etc/apache2/
 else :
+fi
+
+if [[ -d /var/www ]]
+then rm -r /var/www
+else :
+fi
+
+if dpkg -l | grep -qw $k
+then apt purge $k -y -qq > /dev/null
+apt autoremove -y -qq > /dev/null
+s
+  
+  if dpkg -l | grep -qw $k
+  then echo "There was an issue removing $k.  Try removing manually with sudo apt purge $k"
+  else echo "Uninstalled $k"
+  fi
+
+else "Unable to verify that the package $k is installed or not, but will continue processing."
+fi
+
+if dpkg -l | grep -qw $h
+then apt purge $h -y -qq > /dev/null
+apt autoremove -y -qq > /dev/null
+s
+  
+  if dpkg -l | grep -qw $h
+  then echo "There was an issue removing $h.  Try removing manually with sudo apt purge $h"
+  else echo "Uninstalled $h"
+  fi
+
+else "Unable to verify that the package $h is installed or not, but will continue processing."
+fi
+
+if dpkg -l | grep -qw $j
+then apt purge $j -y -qq > /dev/null
+apt autoremove -y -qq > /dev/null
+s
+  
+  if dpkg -l | grep -qw $j
+  then echo "There was an issue removing $j.  Try removing manually with sudo apt purge $j"
+  else echo "Uninstalled $j"
+  fi
+
+else "Unable to verify that the package $j is installed or not, but will continue processing."
 fi
 
 }
