@@ -227,7 +227,7 @@ fi
 #############################
 uninstall_apache () {
 
-if dpkg -l | grep -qw apache2
+if type apache2 &>/dev/null
 then apt purge apache2 -y -qq > /dev/null
 apt autoremove -y -qq > /dev/null
 s
