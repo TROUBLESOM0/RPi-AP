@@ -167,10 +167,17 @@ else echo "sta-ap.stop missing"
 exit 1
 fi
 
+if [[ -f $rootdir/uninstall_lilypin.sh ]]
+then :
+else echo "uninstall_lilypin.sh missing"
+exit 1
+fi
+
 chmod u+x,g+x $stadir/c_start.sh
 chmod u+x,g+x $stadir/check-net.sh
 chmod u+x,g+x $stadir/sta-ap.start
 chmod u+x,g+x $stadir/sta-ap.stop
+chmod u+rwx,g+rx,o+r $rootdir/uninstall_lilypin.sh
 
 }
 #
@@ -200,6 +207,17 @@ echo "checking for errors..."
   echo "Then try re-installing"
   exit 1
   fi
+fi
+}
+#
+##############################
+###   ASK_UNINSTALL-sSET   ###
+##############################
+ash_Uninstall-set () {
+if [[ ! -f $rootdir/uninstall_lilypin.sh ]]
+then :
+else
+chmod u+rwx,g+rx,o+r $rootdir/uninstall_lilypin.sh
 fi
 }
 #
@@ -258,6 +276,7 @@ ask_DL
 echo "Download Complete"
 echo "Configuring service in systemd..."
 ask_Install-service
+ask_Uninstall-set
 echo "Should be ready for Reboot now"
 echo "REBOOTING"
 #reboot now
