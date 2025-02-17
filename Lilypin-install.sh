@@ -212,7 +212,7 @@ fi
 ##############################
 ###   ASK_UNINSTALL-SET   ###
 ##############################
-ash_Uninstall-set () {
+ask_Uninstall-set () {
 if [[ ! -f $rootdir/uninstall_lilypin.sh ]]
 then :
 else
