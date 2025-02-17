@@ -73,16 +73,38 @@ exit 1
 fi
 # moving web files
 echo "loading web files..."
-if [[ -f $ap/index.html ]]
-then cp $ap/index.html $ap/index.html.sta-ap.bkup
-else
-cp $whtml $ap/
+
+if [[ -f $ap/login.php.sta-ap.bkup && ! -f $ap/login.php ]]
+then cp $wlogin $ap/login.php
 fi
-if [[ -f $ap/login.php ]]
+
+if [[ -f $ap/login.php && ! -f $ap/login.php.sta-ap.bkup ]]
 then cp $ap/login.php $ap/login.php.sta-ap.bkup
-else
-cp $wlogin $ap/
 fi
+
+if [[ -f $ap/login.php && -f $ap/login.php.sta-ap.bkup ]]
+then :
+fi
+
+if [[ ! -f $ap/login.data ]]
+then :
+else
+rm $ap/login.data
+fi
+
+
+if [[ -f $ap/index.html.sta-ap.bkup && ! -f $ap/index.html ]]
+then cp $whtml $ap/index.html
+fi
+
+if [[ -f $ap/index.html && ! -f $ap/index.html.sta-ap.bkup ]]
+then cp $ap/index.html $ap/index.html.sta-ap.bkup
+fi
+
+if [[ -f $ap/index.html && -f $ap/index.html.sta-ap.bkup ]]
+then :
+fi
+
 if [[ ! -f $ap/login.data ]]
 then :
 else
