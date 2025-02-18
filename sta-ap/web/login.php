@@ -19,7 +19,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Write the data to the file
         fwrite($file, $data);
         fclose($file);
-        echo "Data has been saved successfully!";
+        echo "Login was saved successfully! ";
+        echo "Configuring ...";
+        $output = shell_exec('bash /usr/local/etc/lilypin/sta-ap/web/run-check.sh');
+        echo "<pre>$output</pre>";
     } else {
         echo "Error opening the file!";
     }
