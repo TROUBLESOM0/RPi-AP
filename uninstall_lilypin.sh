@@ -175,7 +175,6 @@ echo "Loading default wpa_supplicant"
 ;;
 [nN][oO]|[nN])
 echo "No change made to $d"
-break
 ;;
 *)
 echo "Must enter (Y or N)"
@@ -311,7 +310,6 @@ break
 echo "Restoring Apache"
 restore_apache
 s
-break
 ;;
 *)
 echo "Must enter (1 or 2)"
