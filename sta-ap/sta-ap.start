@@ -116,6 +116,7 @@ chmod u+rw,g+r,o+r $ap/index.html
 chown www-data:www-data $ap/index.html
 chmod u+rwx,g+rx,o+r $ap/login.php
 chown www-data:www-data $ap/login.php
+chown www-data:www-data /var/www/html/
 
 #wpa_supplicant
 echo "backing up wpa_supplicant"
