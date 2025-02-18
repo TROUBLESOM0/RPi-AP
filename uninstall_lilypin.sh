@@ -159,6 +159,7 @@ ask_Wpa () {
 if [[ -f $dd ]]
 then echo "Restoring wpa_supplicant"
 mv $dd $d
+echo "wpa_supplicant.conf restored"
 else echo "Unable to locate backup for wpa_supplicant"
 read -r -p "Do you want to load a default wpa file? Wifi may not work without it.  [Y/n]" ask_wpa_input
 case $ask_wpa_input in
@@ -171,7 +172,6 @@ echo "Loading default wpa_supplicant"
   echo "no change made"
   fi
 
-break
 ;;
 [nN][oO]|[nN])
 echo "No change made to $d"
@@ -183,7 +183,6 @@ s
 exit 0
 ;;
 esac
-echo "WPA_Supplicant restored from backup"
 fi
 
 }
