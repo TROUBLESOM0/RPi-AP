@@ -173,16 +173,21 @@ else echo "uninstall_lilypin.sh missing"
 exit 1
 fi
 
+#########################
+# Configure Permissions #
+#########################
 chmod u+x,g+x $stadir/c_start.sh
 chmod u+x,g+x $stadir/check-net.sh
 chmod u+x,g+x $stadir/sta-ap.start
 chmod u+x,g+x $stadir/sta-ap.stop
+chown root:www-data $stadir/web/run-check.sh
+chmod u+rw,g+rx,o+r $stadir/web/run-check.sh
 
 }
 #
-##############################
+###############################
 ###   ASK_INSTALL-SERVICE   ###
-##############################
+###############################
 ask_Install-service () {
 # check service file exists
 if [[ ! -f $stadir/$req/$service ]]
