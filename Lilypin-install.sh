@@ -210,9 +210,9 @@ fi
 }
 #
 ##############################
-###   ASK_UNINSTALL-SET   ###
+###   ASK_UNINSTALL-CFG   ###
 ##############################
-ask_Uninstall-set () {
+ask_Uninstall-cfg () {
 if [[ ! -f $rootdir/uninstall_lilypin.sh ]]
 then :
 else
@@ -289,7 +289,7 @@ ask_DL
 echo "Download Complete"
 echo "Configuring service in systemd..."
 ask_Install-service
-ask_Uninstall-set
+ask_Uninstall-cfg
 echo "Should be ready for Reboot now"
 echo "REBOOTING"
 #reboot now
