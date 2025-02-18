@@ -86,16 +86,16 @@ fi
 ###   ASK_INSTALLMOD-PHP   ###
 ##############################
 ask_Installmod-php () {
-echo "Installing libapache2-mod-php"
+echo "Installing libapache2-mod-php7.4"
 sleep 1
-apt install libapache2-mod-php -y -qq > /dev/null
+apt install libapache2-mod-php7.4 -y -qq > /dev/null
 sleep 1
-dpkg -l | grep -qw libapache2-mod-php
+dpkg -l | grep -qw libapache2-mod-php7.4
 
 if [ $? -eq 0 ] 
 then :
 else
-echo "apache php module installation failed. Try installing manually with sudo apt install libapache2-mod-php"
+echo "apache php module installation failed. Try installing manually with sudo apt install libapache2-mod-php7.4"
 exit 1
 fi
 
@@ -224,10 +224,11 @@ fi
 #      Initial Checks      #
 ############################
 # check if unzip is installed
+
 if type unzip &>/dev/null
 then : # continues script
 else
-echo "ERROR unzip is not installed"
+echo -e "\nERROR: unzip is not installed"
 ask_Installunzip
 echo "unzip install complete"
 fi
@@ -236,27 +237,40 @@ fi
 if type hostapd &>/dev/null
 then : # continues script
 else
-echo "ERROR hostapd is not installed"
+echo -e "\nERROR: hostapd is not installed"
 ask_Installhostapd
-echo "hostapd install complete"
+echo -e "hostapd install complete\n"
 fi
 
 # check if apache2 is installed
 if type apache2 &>/dev/null
 then :
 else
-echo "ERROR: apache2 is not installed"
+echo -e "\nERROR: apache2 is not installed"
 ask_Installapache2
+echo -e "apache2 install complete\n"
 fi
 
 # check if apache php module is installed
-dpkg -l | grep -qw libapache2-mod-php
+dpkg -l | grep -qw libapache2-mod-php7.4
 if [ $? -eq 0 ] 
 then :
 else
+echo -e "\nERROR: libapache2-mod-php7.4 is not installed"
 ask_Installmod-php
+echo -e "libapache2-mod-php7.4 install complete\n"
 fi
+
+# load apache php module
+dpkg -l | grep -qw libapache2-mod-php7.4
+if [ $? -eq 0 ]
+then echo -e "\nLoading apache php module"
 ask_Loadmod-php
+echo -e "\nInitial Checks Complete\n"
+else
+echo -e "\nERROR: libapache2-mod-php7.4 was not installed\n"
+fi
+
 #
 #############################################
 #              Begin Script                 #
