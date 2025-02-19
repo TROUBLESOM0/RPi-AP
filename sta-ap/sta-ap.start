@@ -122,9 +122,9 @@ chown www-data:www-data /var/www/html/
 #wpa_supplicant
 echo "backing up wpa_supplicant"
 if [[ -f /etc/wpa_supplicant/wpa_supplicant.conf ]]
-then mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bkup
+then cp -p /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bkup
 ##### TEST KEEPING WPA-SUPPLICANT FILE ################
-cp $dir/$req/default.wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+#cp $dir/$req/default.wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
 ########################################################
 else
 echo "wpa_supplicant doesn't exist... loading default..."
