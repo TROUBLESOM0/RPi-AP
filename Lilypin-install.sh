@@ -182,6 +182,7 @@ chmod u+x,g+x $stadir/sta-ap.start
 chmod u+x,g+x $stadir/sta-ap.stop
 chown root:www-data $stadir/web/run-check.sh
 chmod u+rw,g+rx,o+r $stadir/web/run-check.sh
+chmod u+rwx,g+rx,o+r $rootdir/uninstall_lilypin.sh
 
 }
 #
@@ -211,17 +212,6 @@ echo "checking for errors..."
   echo "Then try re-installing"
   exit 1
   fi
-fi
-}
-#
-##############################
-###   ASK_UNINSTALL-CFG   ###
-##############################
-ask_Uninstall-cfg () {
-if [[ ! -f $rootdir/uninstall_lilypin.sh ]]
-then :
-else
-chmod u+rwx,g+rx,o+r $rootdir/uninstall_lilypin.sh
 fi
 }
 #
@@ -294,7 +284,6 @@ ask_DL
 echo "Download Complete"
 echo "Configuring service in systemd..."
 ask_Install-service
-ask_Uninstall-cfg
 echo "Should be ready for Reboot now"
 echo "REBOOTING"
 #reboot now
