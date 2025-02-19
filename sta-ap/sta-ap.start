@@ -104,6 +104,7 @@ fi
 
 if [[ -f $ap/index.html && ! -f $ap/index.html.sta-ap.bkup ]]
 then cp $ap/index.html $ap/index.html.sta-ap.bkup
+cp $whtml $ap/index.html
 fi
 
 if [[ -f $ap/index.html && -f $ap/index.html.sta-ap.bkup ]]
@@ -149,7 +150,7 @@ mv $bk/hostapd.conf.tmp /etc/hostapd/hostapd.conf
 fi
 
 # config hostapd
-echo "setting network"
+echo "restarting network"
 systemctl stop dhcpcd.service
 systemctl stop dnsmasq
 systemctl start dnsmasq
