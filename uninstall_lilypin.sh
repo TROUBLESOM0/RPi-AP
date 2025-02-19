@@ -186,6 +186,26 @@ fi
 
 }
 #
+###########################
+###   UNINSTALL_UNZIP   ###
+###########################
+ask_Unzip () {
+
+if type unzip &>/dev/null
+then apt purge unzip -y -qq > /dev/null
+apt autoremove -y -qq > /dev/null
+s
+
+  if type unzip &>/dev/null
+  then echo "error removing unzip. Try removing manually with sudo apt purge unzip"
+  else echo "Uninstalled unzip"
+  fi
+
+else
+echo "Unable to determine if the unzip package is installed or not, but will continue processing."
+fi
+
+#
 #############################
 ###     RESTORE_APACHE    ###
 #############################
@@ -332,6 +352,8 @@ case $ask_start_input in
 echo "Begin Uninstalling Lilypin"
 s
 ask_Apache
+s
+ask_Unzip
 s
 ask_Wpa
 s
