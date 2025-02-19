@@ -94,7 +94,7 @@ systemctl restart dhcpcd
 #systemctl start dnsmasq
 # remove files
 echo "removing backup & login.data"
-rm -r $bk/
+#rm -r $bk/
 rm $ap/login.data
 # DONE - REBOOT
 echo "COMPLETE AP STOP"
