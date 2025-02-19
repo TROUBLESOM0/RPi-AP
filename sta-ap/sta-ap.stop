@@ -56,12 +56,15 @@ fi
 
 #wpa_supplicant
 echo "restoring wpa_supplicant..."
+
 if [[ -f $_wpa.bkup ]]
 then sudo mv /etc/wpa_supplicant/wpa_supplicant.conf.bkup $_wpa
 sudo chown root:root $_wpa
 sudo chmod 600 $_wpa
+echo "wpa backkup replaced wpa"
 else :
 fi
+echo "adding new SSID to wpa"
 echo "" >> "$_wpa"
 echo "network={" >> "$_wpa"
 echo "        ssid=\"$SSID\"" >> "$_wpa"
@@ -94,6 +97,7 @@ systemctl restart dhcpcd
 #systemctl start dnsmasq
 # remove files
 echo "removing backup & login.data"
+echo "NOT REMOVING BACKUP THIS TIME"
 #rm -r $bk/
 rm $ap/login.data
 # DONE - REBOOT
