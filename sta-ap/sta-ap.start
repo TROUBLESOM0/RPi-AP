@@ -147,16 +147,18 @@ else cp $dir/$req/hostapd.conf $bk/hostapd.conf.tmp
 sed -i "${line}s/$/$r/" "${bk}/hostapd.conf.tmp"
 mv $bk/hostapd.conf.tmp /etc/hostapd/hostapd.conf
 fi
+
 # config hostapd
 echo "setting network"
 systemctl stop dhcpcd.service
 systemctl stop dnsmasq
-systemctl start dhcpcd.service
 systemctl start dnsmasq
 systemctl stop hostapd
 systemctl unmask hostapd
 systemctl enable hostapd
 systemctl start hostapd
+systemctl start dhcpcd.service
+
 # DONE - REBOOT
 echo "COMPLETE CONFIG"
 echo "BROADCASTING   lilypin-XXX"
