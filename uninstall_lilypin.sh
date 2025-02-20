@@ -250,7 +250,7 @@ then echo "checking backups"
   echo "no permission changes made"
   else echo "no backup for login.php"
   rm $b
-  echo "$b removed"
+  echo "login.php removed"
   fi
 
 else
