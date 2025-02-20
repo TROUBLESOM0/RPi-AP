@@ -70,11 +70,12 @@ s5 () { sleep 5; }
 ###    ASK_LILYPIN   ###
 ########################
 ask_Lilypin () {
+echo -e "Removing Lilypin Files..."
 
 if [[ -d $rootdir ]]
 then rm -r $rootdir
 echo "Lilypin files removed"
-else echo "Unable to locat Lilypin directory"
+else echo "Unable to locate Lilypin directory"
 echo "No Lilypin Files Removed"
 fi
 
@@ -84,15 +85,16 @@ fi
 ###    ASK_SUDOERS   ###
 ########################
 ask_Sudoers () {
+echo "Setting sudoers..."
 
 if [[ -f /etc/sudoers.d/010_lilypin ]]
 then echo "Removing sudoers file"
 rm /etc/sudoers.d/010_lilypin
   if [[ -f /etc/sudoers.d/010_lilypin ]]
-  then echo "unable to remove sudoers file"
-  else echo "sudoers file removed"
+  then echo -e "unable to remove sudoers file\n"
+  else echo -e "sudoers file removed\n"
   fi
-else echo "sudoers file doesn't exist"
+else echo -e "sudoers file doesn't exist\n"
 fi
 
 }
@@ -101,17 +103,18 @@ fi
 ###    ASK_HOSTAPD   ###
 ########################
 ask_Hostapd () {
+echo "Setting hostapd..."
 
 if [[ -f $bk/hostapd.conf ]]
 then mv $bk/hostapd.conf /etc/hostapd/
-echo "hostapd.conf restored from backup"
+echo -e "hostapd.conf restored from backup\n"
 else apt purge hostapd -y -qq > /dev/null
 
   if [[ -d /etc/hostapd ]]
   then rm -r /etc/hostapd
   fi
 
-echo "Uninstalled hostapd"
+echo -e "Uninstalled hostapd\n"
 fi
 
 }
@@ -120,6 +123,7 @@ fi
 ###    ASK_DNSMASQ   ###
 ########################
 ask_Dnsmasq () {
+echo "Setting dnsmasq..."
 
 if [[ -f $ff ]]
 then :
@@ -130,13 +134,14 @@ fi
 cp $ff $f
 chown root:root $f
 chmod u+rw,g+r,o+r $f
-echo "dnsmasq.conf restored from backup"
+echo -e "dnsmasq.conf restored from backup\n"
 }
 #
 #######################
 ###    ASK_DHCPCD   ###
 #######################
 ask_Dhcpcd () {
+echo -e "\nSetting dhcpcd..."
 
 if [[ -f $gg ]]
 then :
@@ -147,13 +152,14 @@ fi
 cp $gg $g
 chown root:netdev $g
 chmod u+rw,g+rw,o+r $g
-echo "dhcpcd.conf restored from backup"
+echo -e "dhcpcd.conf restored from backup\n"
 }
 #
 #######################
 ###   ASK_SERVICE   ###
 #######################
 ask_Service () {
+echo -e "\nRemoving system service configuration..."
 
 if [[ -f /etc/systemd/system/lilypin-check.service ]]
 then systemctl disable lilypin-check.service
@@ -163,7 +169,7 @@ then systemctl disable lilypin-check.service
   else echo "Unable to remove service.  Try manually with sudo systemctl disable lilypin-check.service"
   fi
 
-else echo "unable to locat lilypin-check.service"
+else echo "unable to locate lilypin-check.service"
 fi
 
 }
@@ -172,6 +178,7 @@ fi
 ###   ASK_WPA   ###
 #####################
 ask_Wpa () {
+echo -e "\nSetting wpa_supplicant..."
 
 if [[ -f $dd ]]
 then echo "Restoring wpa_supplicant"
@@ -207,6 +214,7 @@ fi
 ###   UNINSTALL_UNZIP   ###
 ###########################
 ask_Unzip () {
+echo -e "Uninstalling unzip...\n"
 
 if type unzip &>/dev/null
 then apt purge unzip -y -qq > /dev/null
@@ -215,11 +223,11 @@ s
 
   if type unzip &>/dev/null
   then echo "error removing unzip. Try removing manually with sudo apt purge unzip"
-  else echo "Uninstalled unzip"
+  else -e echo "Uninstalled unzip\n"
   fi
 
 else
-echo "Unable to determine if the unzip package is installed or not, but will continue processing."
+echo -e "Unable to determine if the unzip package is installed or not, but will continue processing.\n"
 fi
 
 }
@@ -395,8 +403,8 @@ systemctl restart dhcpcd
 s
 ask_Lilypin
 s
-echo "Lilypin uninstall complete"
-echo "May need to reboot in order to complete the network reconfiguration"
+echo -e "Lilypin uninstall complete\n"
+echo -e "\nMay need to reboot in order to complete the network reconfiguration\n"
 break
 ;;
 [nN][oO]|[nN])
