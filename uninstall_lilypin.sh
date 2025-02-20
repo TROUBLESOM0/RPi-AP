@@ -157,7 +157,7 @@ ask_Service () {
 
 if [[ -f /etc/systemd/system/lilypin-check.service ]]
 then systemctl disable lilypin-check.service
-  
+
   if [[ -f /etc/systemd/system/lilypin-check.service ]]
   then echo "Lilypin service removed"
   else echo "Unable to remove service.  Try manually with sudo systemctl disable lilypin-check.service"
@@ -182,7 +182,7 @@ read -r -p "Do you want to load a default wpa file? Wifi may not work without it
 case $ask_wpa_input in
 [yY][eE][sS]|[yY])
 echo "Loading default wpa_supplicant"
-  
+
   if [[ -f $stadir/$req/default.wpa_supplicant.conf ]]
   then cp $stadir/$req/default.wpa_supplicant.conf $d
   else echo "unable to locate default wpa_supplicant"
@@ -291,7 +291,7 @@ if dpkg -l | grep -qw $k
 then apt purge $k -y -qq > /dev/null
 apt autoremove -y -qq > /dev/null
 s
-  
+
   if dpkg -l | grep -qw $k
   then echo "There was an issue removing $k.  Try removing manually with sudo apt purge $k"
   else echo "Uninstalled $k"
@@ -304,7 +304,7 @@ if dpkg -l | grep -qw $h
 then apt purge $h -y -qq > /dev/null
 apt autoremove -y -qq > /dev/null
 s
-  
+
   if dpkg -l | grep -qw $h
   then echo "There was an issue removing $h.  Try removing manually with sudo apt purge $h"
   else echo "Uninstalled $h"
@@ -317,7 +317,7 @@ if dpkg -l | grep -qw $j
 then apt purge $j -y -qq > /dev/null
 apt autoremove -y -qq > /dev/null
 s
-  
+
   if dpkg -l | grep -qw $j
   then echo "There was an issue removing $j.  Try removing manually with sudo apt purge $j"
   else echo "Uninstalled $j"
