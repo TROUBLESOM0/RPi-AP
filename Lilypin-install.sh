@@ -17,16 +17,6 @@ if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
 fi
-#logs
-if [[ ! -f /usr/local/etc/lilypin/sta-ap/log ]]
-then
-touch /usr/local/etc/lilypin/sta-ap/log
-echo "$(date)---INSTALLATION FOR LILYPIN---" >> /usr/local/etc/lilypin/sta-ap/log
-else echo "" >> /usr/local/etc/lilypin/sta-ap/log
-echo "$(date)---RE-INSTALLING LILYPIN---" >> /usr/local/etc/lilypin/sta-ap/log
-fi
-exec > >(tee -a /usr/local/etc/lilypin/sta-ap/log) 2>&1
-#
 #
 #
 ### VARIABLES ###
@@ -135,6 +125,54 @@ echo "*********** Check and see ***************"
 
 }
 #
+###############################
+###   ASK_INSTALL-SERVICE   ###
+###############################
+ask_Install-service () {
+# check service file exists
+
+if [[ ! -f $stadir/$req/$service ]]
+then echo -e "${Error}ERROR${Off} $service is missing!"
+exit 1
+else
+chown root:root $stadir/$req/$service
+chmod u+rwx,g+rx,o+r $stadir/$req/$service
+sleep 2
+ln -s $stadir/$req/$service /etc/systemd/system/$service
+sleep 1
+echo "enabling service..."
+systemctl enable $service
+# check for errors on service
+echo "checking for errors..."
+  if systemctl is-enabled "$service" &>/dev/null
+  then echo "service is enabled"
+  else
+  echo "There was an issue configuring the service '$service'!"
+  echo "Run Uninstall script"
+  echo "Then try re-installing"
+  exit 1
+  fi
+fi
+
+}
+#
+###################
+###   ASK_LOG   ###
+###################
+ask_Log () {
+#logs
+
+if [[ ! -f /usr/local/etc/lilypin/sta-ap/log ]]
+then
+touch /usr/local/etc/lilypin/sta-ap/log
+echo "$(date)---INSTALLATION FOR LILYPIN---" >> /usr/local/etc/lilypin/sta-ap/log
+else echo "" >> /usr/local/etc/lilypin/sta-ap/log
+echo "$(date)---RE-INSTALLING LILYPIN---" >> /usr/local/etc/lilypin/sta-ap/log
+fi
+
+exec > >(tee -a /usr/local/etc/lilypin/sta-ap/log) 2>&1
+}
+#
 ##################
 ###   ASK_DL   ###
 ##################
@@ -194,35 +232,6 @@ chown root:www-data $stadir/web/run-check.sh
 chmod u+rw,g+rx,o+r $stadir/web/run-check.sh
 chmod u+rwx,g+rx,o+r $rootdir/uninstall_lilypin.sh
 
-}
-#
-###############################
-###   ASK_INSTALL-SERVICE   ###
-###############################
-ask_Install-service () {
-# check service file exists
-if [[ ! -f $stadir/$req/$service ]]
-then echo -e "${Error}ERROR${Off} $service is missing!"
-exit 1
-else
-chown root:root $stadir/$req/$service
-chmod u+rwx,g+rx,o+r $stadir/$req/$service
-sleep 2
-ln -s $stadir/$req/$service /etc/systemd/system/$service
-sleep 1
-echo "enabling service..."
-systemctl enable $service
-# check for errors on service
-echo "checking for errors..."
-  if systemctl is-enabled "$service" &>/dev/null
-  then echo "service is enabled"
-  else
-  echo "There was an issue configuring the service '$service'!"
-  echo "Run Uninstall script"
-  echo "Then try re-installing"
-  exit 1
-  fi
-fi
 }
 #
 ############################
@@ -304,6 +313,7 @@ fi
 echo "Downloading LilyPin..."
 ask_DL
 echo "Download Complete"
+ask_Log
 echo "Configuring service in systemd..."
 ask_Install-service
 echo "Should be ready for Reboot now"
