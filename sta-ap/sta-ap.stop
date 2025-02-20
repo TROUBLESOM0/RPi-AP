@@ -13,7 +13,7 @@ fi
 #
 ### VARIABLES ###
 #################
-dir=/usr/local/etc/lilypin/sta-ap
+dir=/usr/local/etc/RPi-ap/sta-ap
 req=required
 bk=$dir/pre-sys-bkup
 ap=/var/www/html

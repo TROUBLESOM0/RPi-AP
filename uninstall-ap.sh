@@ -1,15 +1,15 @@
 #!/bin/bash
 #
 #
-echo "This will remove all associated files and settings related to Lilypin"
+echo "This will remove all associated files and settings related to RPi-ap"
 echo "And will try to revert back to the original files and settings"
 echo ""
 echo "If an issue occurs, script should provide information on the issue and"
 echo "query whether you want to continue or not."
 echo "----------------------------------------------------------------------"
 echo "FILE/FOLDER REMOVAL :"
-echo "   - lilypin/ in /usr/local/etc/ "
-echo "   - lilypin-check.service in /etc/systemd/system/ "
+echo "   - RPi-ap/ in /usr/local/etc/ "
+echo "   - RPi-ap-check.service in /etc/systemd/system/ "
 echo "   - login.php, login.data, index.html in /var/www/html/ "
 echo "   - hostapd.conf in /etc/ "
 echo ""
@@ -28,13 +28,13 @@ echo ""
 #
 ### VARIABLES ###
 #################
-rootdir=/usr/local/etc/lilypin
-stadir=/usr/local/etc/lilypin/sta-ap
+rootdir=/usr/local/etc/RPi-ap
+stadir=/usr/local/etc/RPi-ap/sta-ap
 req=required
 whtml=$stadir/web/index.html
 wlogin=$stadir/web/login.php
 ap=/var/www/html
-service=lilypin-check.service
+service=RPi-ap-check.service
 _wpa=/etc/wpa_supplicant
 #
 ### Variables for Removing ###
@@ -67,16 +67,16 @@ s4 () { sleep 4; }
 s5 () { sleep 5; }
 #
 ########################
-###    ASK_LILYPIN   ###
+###    ASK_RPI-AP   ###
 ########################
-ask_Lilypin () {
-echo -e "Removing Lilypin Files..."
+ask_RPi-ap () {
+echo -e "Removing RPi-ap Files..."
 
 if [[ -d $rootdir ]]
 then rm -r $rootdir
-echo "Lilypin files removed"
-else echo "Unable to locate Lilypin directory"
-echo "No Lilypin Files Removed"
+echo "RPi-ap files removed"
+else echo "Unable to locate RPi-ap directory"
+echo "No RPi-ap Files Removed"
 fi
 
 }
@@ -87,10 +87,10 @@ fi
 ask_Sudoers () {
 echo "Setting sudoers..."
 
-if [[ -f /etc/sudoers.d/010_lilypin ]]
+if [[ -f /etc/sudoers.d/010_RPi-ap ]]
 then echo "Removing sudoers file"
-rm /etc/sudoers.d/010_lilypin
-  if [[ -f /etc/sudoers.d/010_lilypin ]]
+rm /etc/sudoers.d/010_RPi-ap
+  if [[ -f /etc/sudoers.d/010_RPi-ap ]]
   then echo -e "unable to remove sudoers file\n"
   else echo -e "sudoers file removed\n"
   fi
@@ -161,16 +161,16 @@ echo -e "dhcpcd.conf restored from backup\n"
 ask_Service () {
 echo -e "\nRemoving system service configuration..."
 
-if [[ -f /etc/systemd/system/lilypin-check.service ]]
-then systemctl disable lilypin-check.service
+if [[ -f /etc/systemd/system/RPi-ap-check.service ]]
+then systemctl disable RPi-ap-check.service
 s3
 
-  if [[ -f /etc/systemd/system/lilypin-check.service ]]
-  then echo "Lilypin service removed"
-  else echo "Unable to remove service.  Try manually with sudo systemctl disable lilypin-check.service"
+  if [[ -f /etc/systemd/system/RPi-ap-check.service ]]
+  then echo "RPi-ap service removed"
+  else echo "Unable to remove service.  Try manually with sudo systemctl disable RPi-ap-check.service"
   fi
 
-else echo "unable to locate lilypin-check.service"
+else echo "unable to locate RPi-ap-check.service"
 fi
 
 }
@@ -375,10 +375,10 @@ done
 ask_Start () {
 while true
 do
-read -r -p "Do You Want To Uninstall Lilypin? [Y/n]" ask_start_input
+read -r -p "Do You Want To Uninstall RPi-ap? [Y/n]" ask_start_input
 case $ask_start_input in
 [yY][eE][sS]|[yY])
-echo "Begin Uninstalling Lilypin"
+echo "Begin Uninstalling RPi-ap"
 s
 ask_Apache
 s
@@ -402,9 +402,9 @@ systemctl disable hostapd
 systemctl mask hostapd
 systemctl restart dhcpcd
 s
-ask_Lilypin
+ask_RPi-ap
 s
-echo -e "Lilypin uninstall complete\n"
+echo -e "RPi-ap uninstall complete\n"
 echo -e "\nMay need to reboot in order to complete the network reconfiguration\n"
 break
 ;;

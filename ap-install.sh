@@ -7,8 +7,8 @@ echo "via a web browser interface."
 echo "This script will perform the following actions:"
 echo "1. Perform initial checks to determine required system programs are installed or present"
 echo "2. Download a selection of .bash scripts and save in the location:"
-echo -e "  \033[1;33m/usr/local/etc/lilypin\e[0m"
-echo "3. Setup the lilypin-check.service into /etc/systemd/system/ folder to run on boot"
+echo -e "  \033[1;33m/usr/local/etc/RPi-ap\e[0m"
+echo "3. Setup the RPi-ap-check.service into /etc/systemd/system/ folder to run on boot"
 echo "        - this creates a local AP for configuring a wireless connection if none is present"
 #
 #
@@ -21,14 +21,14 @@ fi
 #
 ### VARIABLES ###
 #################
-rootdir=/usr/local/etc/lilypin
-stadir=/usr/local/etc/lilypin/sta-ap
+rootdir=/usr/local/etc/RPi-ap
+stadir=/usr/local/etc/RPi-ap/sta-ap
 req=required
 whtml=$stadir/web/index.html
 wlogin=$stadir/web/login.php
 ap=/var/www/html
 gitLink="https://github.com/TROUBLESOM0/LilyPin/archive/refs/heads/main.zip"
-service=lilypin-check.service
+service=RPi-ap-check.service
 _break=$(echo "---------------")
 
 ############################
@@ -164,15 +164,15 @@ fi
 ask_Log () {
 #logs
 
-if [[ ! -f /usr/local/etc/lilypin/sta-ap/log ]]
+if [[ ! -f /usr/local/etc/RPi-ap/sta-ap/log ]]
 then
-touch /usr/local/etc/lilypin/sta-ap/log
-echo "$(date)---INSTALLATION FOR LILYPIN---" >> /usr/local/etc/lilypin/sta-ap/log
-else echo "" >> /usr/local/etc/lilypin/sta-ap/log
-echo "$(date)---RE-INSTALLING LILYPIN---" >> /usr/local/etc/lilypin/sta-ap/log
+touch /usr/local/etc/RPi-ap/sta-ap/log
+echo "$(date)---INSTALLATION FOR RPI-AP---" >> /usr/local/etc/RPi-ap/sta-ap/log
+else echo "" >> /usr/local/etc/RPi-ap/sta-ap/log
+echo "$(date)---RE-INSTALLING RPI-AP---" >> /usr/local/etc/RPi-ap/sta-ap/log
 fi
 
-exec > >(tee -a /usr/local/etc/lilypin/sta-ap/log) 2>&1
+exec > >(tee -a /usr/local/etc/RPi-ap/sta-ap/log) 2>&1
 }
 #
 ##################
@@ -189,7 +189,7 @@ exit 1
 fi
 
 unzip -qq -o /usr/local/etc/main.zip -d /usr/local/etc/
-mv /usr/local/etc/LilyPin-main/ /usr/local/etc/lilypin
+mv /usr/local/etc/LilyPin-main/ /usr/local/etc/RPi-ap
 rm /usr/local/etc/main.zip
 #rm $rootdir/Lilypin-install.sh
 
@@ -224,11 +224,11 @@ exit 1
 fi
 
 # add sudo file to /etc/sudoers.d/
-if [[ ! -f /etc/sudoers.d/010_lilypin ]]
+if [[ ! -f /etc/sudoers.d/010_RPi-ap ]]
 then echo "Adding permission to sudoers.d"
-cp $stadir/$req/010_lilypin /etc/sudoers.d/010_lilypin
-chmod 440 /etc/sudoers.d/010_lilypin
-  if [[ -f /etc/sudoers.d/010_lilypin ]]
+cp $stadir/$req/010_RPi-ap /etc/sudoers.d/010_RPi-ap
+chmod 440 /etc/sudoers.d/010_RPi-ap
+  if [[ -f /etc/sudoers.d/010_RPi-ap ]]
   then echo "sudoers file added"
   else echo "***ERROR adding sudoers file***"
   fi
@@ -322,7 +322,7 @@ echo "removed previous installation"
 else echo "No previous installation found. Start initial install"
 fi
 
-echo "Downloading LilyPin..."
+echo "Downloading RPI-AP..."
 ask_DL
 echo "Download Complete"
 ask_Log

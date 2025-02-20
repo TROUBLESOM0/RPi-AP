@@ -4,7 +4,7 @@
 # Configuration script to convert Pi Zero W into Local Access Point
 # https://gist.github.com/TROUBLESOM0/037d73d7e858ca9b37d9b27ee0591b34
 #
-# SSID = lilypin-ap
+# SSID = RPi-ap-{random_number}
 #
 # Check script is running as root
 if [[ $( whoami ) != "root" ]]
@@ -15,7 +15,7 @@ fi
 #
 ### VARIABLES ###
 #################
-dir=/usr/local/etc/lilypin/sta-ap
+dir=/usr/local/etc/RPi-ap/sta-ap
 req=required
 whtml=$dir/web/index.html
 wlogin=$dir/web/login.php
@@ -166,6 +166,6 @@ systemctl start dhcpcd.service
 
 # DONE - REBOOT
 echo "COMPLETE CONFIG"
-echo "BROADCASTING   lilypin-XXX"
+echo "BROADCASTING   RPi-ap-XXX"
 exit 0
 #reboot now

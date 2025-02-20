@@ -7,6 +7,6 @@ WantedBy=multi-user.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/sudo /usr/local/etc/lilypin/sta-ap/c_start.sh
+ExecStart=/usr/bin/sudo /usr/local/etc/RPi-ap/sta-ap/c_start.sh
 User=root
 Environment=DISPLAY=:0

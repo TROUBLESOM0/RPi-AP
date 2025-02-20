@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         fclose($file);
         echo "Login was saved successfully! ";
         echo "Configuring ...";
-        $output = shell_exec('bash /usr/local/etc/lilypin/sta-ap/web/run-check.sh');
+        $output = shell_exec('bash /usr/local/etc/RPi-ap/sta-ap/web/run-check.sh');
         echo "<pre>$output</pre>";
     } else {
         echo "Error opening the file!";
