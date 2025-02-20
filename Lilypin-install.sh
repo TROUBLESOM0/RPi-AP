@@ -318,5 +318,5 @@ echo "Configuring service in systemd..."
 ask_Install-service
 echo "Should be ready for Reboot now"
 echo "REBOOTING"
-#reboot now
+reboot
 exit 0
