@@ -279,7 +279,7 @@ apt autoremove -y -qq > /dev/null
 s
 
   if type apache2 &>/dev/null
-  then echo "error removing apache2. Try removing manually with sudo apt purge apache2"
+  then echo "ERROR: unable to confirm removal of apache2. Try removing manually with sudo apt purge apache2"
   else echo "Uninstalled apache2"
   fi
 
@@ -288,7 +288,7 @@ echo "Unable to determine if the apache2 package is installed or not, but will c
 fi
 
 if [[ -d /etc/apache2 ]]
-then echo "Removing leftover apache directory"
+then echo -e "\nRemoving leftover apache directory"
 rm -r /etc/apache2/
 else :
 fi
