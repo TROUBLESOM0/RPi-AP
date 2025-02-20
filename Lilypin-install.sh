@@ -254,7 +254,7 @@ chmod u+rwx,g+rx,o+r $rootdir/uninstall_lilypin.sh
 if type unzip &>/dev/null
 then : # continues script
 else
-echo -e "\nERROR: unzip is not installed"
+echo -e "\nUnzip is not installed"
 ask_Installunzip
 echo "unzip install complete"
 fi
@@ -263,7 +263,7 @@ fi
 if type hostapd &>/dev/null
 then : # continues script
 else
-echo -e "\nERROR: hostapd is not installed"
+echo -e "\nHostapd is not installed"
 ask_Installhostapd
 echo -e "hostapd install complete\n"
 fi
@@ -272,7 +272,7 @@ fi
 if type apache2 &>/dev/null
 then :
 else
-echo -e "\nERROR: apache2 is not installed"
+echo -e "\nApache is not installed"
 ask_Installapache2
 echo -e "apache2 install complete\n"
 fi
@@ -282,7 +282,7 @@ dpkg -l | grep -qw libapache2-mod-php7.4
 if [ $? -eq 0 ] 
 then :
 else
-echo -e "\nERROR: libapache2-mod-php7.4 is not installed"
+echo -e "\nLibapache2-mod-php7.4 is not installed"
 ask_Installmod-php
 echo -e "libapache2-mod-php7.4 install complete\n"
 fi
