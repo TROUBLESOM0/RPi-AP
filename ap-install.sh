@@ -217,9 +217,9 @@ else echo "sta-ap.stop missing"
 exit 1
 fi
 
-if [[ -f $rootdir/uninstall_lilypin.sh ]]
+if [[ -f $rootdir/uninstall-ap.sh ]]
 then :
-else echo "uninstall_lilypin.sh missing"
+else echo "uninstall-ap.sh missing"
 exit 1
 fi
 
@@ -244,7 +244,7 @@ chmod u+x,g+x $stadir/sta-ap.start
 chmod u+x,g+x $stadir/sta-ap.stop
 chown root:www-data $stadir/web/run-check.sh
 chmod u+rw,g+rx,o+r $stadir/web/run-check.sh
-chmod u+rwx,g+rx,o+r $rootdir/uninstall_lilypin.sh
+chmod u+rwx,g+rx,o+r $rootdir/uninstall-ap.sh
 
 }
 #
