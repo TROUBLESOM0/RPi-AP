@@ -40,7 +40,8 @@ apt install unzip -y -qq > /dev/null
 sleep 1
 
 if type unzip &>/dev/null
-then :
+then echo "Installed unzip"
+continue
 else
 echo "unzip installation failed. Try installing manually with sudo apt install unzip"
 exit 1
