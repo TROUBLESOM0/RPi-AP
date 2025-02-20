@@ -27,7 +27,7 @@ req=required
 whtml=$stadir/web/index.html
 wlogin=$stadir/web/login.php
 ap=/var/www/html
-gitLink="https://github.com/TROUBLESOM0/LilyPin/archive/refs/heads/main.zip"
+gitLink="https://github.com/TROUBLESOM0/RPi-AP/archive/refs/heads/main.zip"
 service=RPi-ap-check.service
 _break=$(echo "---------------")
 
