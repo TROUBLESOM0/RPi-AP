@@ -249,7 +249,7 @@ then echo "checking backups"
   echo "no permission changes made"
   else echo "no backup for login.php"
   rm $b
-  echo "no change made"
+  echo "$b removed"
   fi
 
 else
