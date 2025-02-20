@@ -83,7 +83,7 @@ fi
 ########################
 ###    ASK_SUDOERS   ###
 ########################
-ask_Sudoers
+ask_Sudoers () {
 
 if [[ -f /etc/sudoers.d/010_lilypin ]]
 then echo "Removing sudoers file"
@@ -95,6 +95,7 @@ rm /etc/sudoers.d/010_lilypin
 else echo "sudoers file doesn't exist"
 fi
 
+}
 #
 ########################
 ###    ASK_HOSTAPD   ###
