@@ -32,8 +32,9 @@ cp $dir/$req/default.wpa_supplicant.conf $_wpa
 else :
 fi
 #
-# Begin script
-#
+#############################################
+#              Begin Script                 #
+#############################################
 echo "checking for required files..."
 if [[ -f $bk/dhcpcd.conf ]]
 then :
