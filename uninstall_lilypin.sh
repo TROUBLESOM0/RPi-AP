@@ -106,7 +106,7 @@ if [[ -f $bk/hostapd.conf ]]
 then mv $bk/hostapd.conf /etc/hostapd/
 echo "hostapd.conf restored from backup"
 else apt purge hostapd -y -qq > /dev/null
-  
+
   if [[ -d /etc/hostapd ]]
   then rm -r /etc/hostapd
   fi
@@ -222,6 +222,7 @@ else
 echo "Unable to determine if the unzip package is installed or not, but will continue processing."
 fi
 
+}
 #
 #############################
 ###     RESTORE_APACHE    ###
