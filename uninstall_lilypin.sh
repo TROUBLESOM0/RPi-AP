@@ -347,6 +347,7 @@ break
 echo "Restoring Apache"
 restore_apache
 s
+break
 ;;
 *)
 echo "Must enter (1 or 2)"
