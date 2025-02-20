@@ -29,6 +29,7 @@ wlogin=$stadir/web/login.php
 ap=/var/www/html
 gitLink="https://github.com/TROUBLESOM0/LilyPin/archive/refs/heads/main.zip"
 service=lilypin-check.service
+_break=$(echo "---------------")
 
 ############################
 ###   ASK_INSTALLUNZIP   ###
@@ -251,6 +252,8 @@ chmod u+rwx,g+rx,o+r $rootdir/uninstall_lilypin.sh
 ############################
 # check if unzip is installed
 
+$_break
+
 if type unzip &>/dev/null
 then : # continues script
 else
@@ -258,6 +261,8 @@ echo -e "\nUnzip is not installed"
 ask_Installunzip
 echo "unzip install complete"
 fi
+
+$_break
 
 # check if hostapd is installed
 if type hostapd &>/dev/null
@@ -268,6 +273,8 @@ ask_Installhostapd
 echo -e "hostapd install complete\n"
 fi
 
+$_break
+
 # check if apache2 is installed
 if type apache2 &>/dev/null
 then :
@@ -276,6 +283,8 @@ echo -e "\nApache is not installed"
 ask_Installapache2
 echo -e "apache2 install complete\n"
 fi
+
+$_break
 
 # check if apache php module is installed
 dpkg -l | grep -qw libapache2-mod-php7.4
@@ -286,6 +295,8 @@ echo -e "\nLibapache2-mod-php7.4 is not installed"
 ask_Installmod-php
 echo -e "libapache2-mod-php7.4 install complete\n"
 fi
+
+$_break
 
 # load apache php module
 dpkg -l | grep -qw libapache2-mod-php7.4
@@ -316,7 +327,6 @@ echo "Download Complete"
 ask_Log
 echo "Configuring service in systemd..."
 ask_Install-service
-echo "Should be ready for Reboot now"
-echo "REBOOTING"
+echo -e "\nREBOOTING\n"
 reboot
 exit 0
