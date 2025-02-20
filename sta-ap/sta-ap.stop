@@ -59,10 +59,10 @@ fi
 echo "restoring wpa_supplicant..."
 
 if [[ -f $_wpa.bkup ]]
-then sudo mv /etc/wpa_supplicant/wpa_supplicant.conf.bkup $_wpa
+then echo "Setting wpa_supplicant"
 sudo chown root:root $_wpa
-sudo chmod 600 $_wpa
-echo "wpa backkup replaced wpa"
+sudo chmod 640 $_wpa
+echo ""
 else :
 fi
 echo "adding new SSID to wpa"
