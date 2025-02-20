@@ -81,6 +81,22 @@ fi
 }
 #
 ########################
+###    ASK_SUDOERS   ###
+########################
+ask_Sudoers
+
+if [[ -f /etc/sudoers.d/010_lilypin ]]
+then echo "Removing sudoers file"
+rm /etc/sudoers.d/010_lilypin
+  if [[ -f /etc/sudoers.d/010_lilypin ]]
+  then echo "unable to remove sudoers file"
+  else echo "sudoers file removed"
+  fi
+else echo "sudoers file doesn't exist"
+fi
+
+#
+########################
 ###    ASK_HOSTAPD   ###
 ########################
 ask_Hostapd () {
@@ -364,6 +380,8 @@ s
 ask_Dnsmasq
 s
 ask_Hostapd
+s
+ask_Sudoers
 s
 echo "Restarting Network"
 systemctl stop hostapd
