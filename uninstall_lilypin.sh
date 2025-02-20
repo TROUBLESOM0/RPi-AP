@@ -346,22 +346,22 @@ ask_Apache () {
 while true
 do
 echo "It is okay to leave apache installed if you are not going to have a forward facing server."
-read -r -p "Do you want to [1]uninstall or [2]restore Apache Web Server? Type [1 or 2] : " ask_apache_input
+read -r -p "Do you want to [Y]uninstall or [N]restore Apache Web Server? Type [Y or N] : " ask_apache_input
 case $ask_apache_input in
-[1])
+[yY])
 echo "Begin Uninstalling Apache"
 uninstall_apache
 s
 break
 ;;
-[2])
+[nN])
 echo "Restoring Apache"
 restore_apache
 s
 break
 ;;
 *)
-echo "Must enter (1 or 2)"
+echo "Must enter (y or n)"
 s
 exit 0
 ;;
