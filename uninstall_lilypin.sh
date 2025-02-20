@@ -248,6 +248,7 @@ then echo "checking backups"
   chown www-data:www-data $b
   echo "no permission changes made"
   else echo "no backup for login.php"
+  rm $b
   echo "no change made"
   fi
 
