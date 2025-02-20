@@ -163,6 +163,7 @@ echo -e "\nRemoving system service configuration..."
 
 if [[ -f /etc/systemd/system/lilypin-check.service ]]
 then systemctl disable lilypin-check.service
+s3
 
   if [[ -f /etc/systemd/system/lilypin-check.service ]]
   then echo "Lilypin service removed"
