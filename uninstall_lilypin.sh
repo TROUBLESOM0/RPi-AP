@@ -50,7 +50,7 @@ j=apache2-doc
 k=apache2-bin
 #
 ### Variables for Restoring ###
-bk=$dir/pre-sys-bkup
+bk=$stadir/pre-sys-bkup
 bb=$ap/login.php.sta-ap.bkup
 dd=$d.bkup
 ee=$ap/index.html.sta-ap.bkup
