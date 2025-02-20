@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #
-echo "This will install the Lilypin Access Point"
+echo "This will install a Local Access Point"
 echo "for connecting to a WiFi Access Point"
 echo "via a web browser interface."
 echo "This script will perform the following actions:"
