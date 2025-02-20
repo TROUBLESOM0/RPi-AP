@@ -65,7 +65,9 @@ else echo "missing hostapd.conf for sta-ap"
 exit 1
 fi
 
-# Configure web files
+#######################
+# Configure web files #
+#######################
 echo "starting WiFi login..."
 if test -d $ap
 then :
@@ -119,7 +121,9 @@ chmod u+rwx,g+rx,o+r $ap/login.php
 chown www-data:www-data $ap/login.php
 chown www-data:www-data /var/www/html/
 
-#wpa_supplicant
+##################
+# wpa_supplicant #
+##################
 echo "backing up wpa_supplicant"
 if [[ -f /etc/wpa_supplicant/wpa_supplicant.conf ]]
 then cp -p /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bkup
