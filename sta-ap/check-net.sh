@@ -34,8 +34,9 @@ else echo "missing sta-ap.stop"
 exit 1
 fi
 #
-# Begin Script
-#
+#############################################
+#              Begin Script                 #
+#############################################
 ping -c 1 8.8.8.8 &> /dev/null
 # ping Google and check result with $?
 if [ $? -ne 0 ]
