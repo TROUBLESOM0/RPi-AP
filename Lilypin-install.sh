@@ -221,6 +221,18 @@ else echo "uninstall_lilypin.sh missing"
 exit 1
 fi
 
+# add sudo file to /etc/sudoers.d/
+if [[ ! -f /etc/sudoers.d/010_lilypin ]]
+then echo "Adding permission to sudoers.d"
+cp $stadir/$req/010_lilypin /etc/sudoers.d/010_lilypin
+chmod 440 /etc/sudoers.d/010_lilypin
+  if [[ -f /etc/sudoers.d/010_lilypin ]]
+  then echo "sudoers file added"
+  else echo "***ERROR adding sudoers file***"
+  fi
+else echo "sudoers file already exists"
+fi
+
 #########################
 # Configure Permissions #
 #########################
@@ -283,18 +295,6 @@ ask_Loadmod-php
 echo -e "\nInitial Checks Complete\n"
 else
 echo -e "\nERROR: libapache2-mod-php7.4 was not installed\n"
-fi
-
-# add sudo file to /etc/sudoers.d/
-if [[ ! -f /etc/sudoers.d/010_lilypin ]]
-then echo "Adding permission to sudoers.d"
-cp $stadir/$req/010_lilypin /etc/sudoers.d/010_lilypin
-chmod 440 /etc/sudoers.d/010_lilypin
-  if [[ -f /etc/sudoers.d/010_lilypin ]]
-  then echo "sudoers file added"
-  else echo "***ERROR adding sudoers file***"
-  fi
-else echo "sudoers file already exists"
 fi
 
 #
