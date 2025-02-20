@@ -17,6 +17,16 @@ if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
 fi
+#logs
+if [[ ! -f /usr/local/etc/lilypin/sta-ap/log ]]
+then
+touch /usr/local/etc/lilypin/sta-ap/log
+echo "$(date)---INSTALLATION FOR LILYPIN---" >> /usr/local/etc/lilypin/sta-ap/log
+else echo "" >> /usr/local/etc/lilypin/sta-ap/log
+echo "$(date)---RE-INSTALLING LILYPIN---" >> /usr/local/etc/lilypin/sta-ap/log
+fi
+exec > >(tee -a /usr/local/etc/lilypin/sta-ap/log) 2>&1
+#
 #
 #
 ### VARIABLES ###
