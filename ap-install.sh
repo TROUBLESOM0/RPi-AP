@@ -209,6 +209,7 @@ rm /usr/local/etc/main.zip
 
 if [[ -d $rootdir ]]
 then echo "Download complete"
+fi
 
 if [[ -f $stadir/c_start.sh ]]
 then :
