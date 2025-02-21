@@ -104,26 +104,33 @@ fi
 }
 #
 ###########################
-###   ASK_LOADMOD-PHP   ###   THIS ISN'T WORKING RIGHT
+###   ASK_LOADMOD-PHP   ###
 ###########################
 ask_Loadmod-php () {
-PHP_VERSION=$(php -v | head -n 1 | awk '{print $2}' | cut -d '.' -f1-2)
+php_ver=$(php -v | head -n 1 | awk '{print $2}' | cut -d '.' -f1-2)
 echo "Identifying the module name based on the PHP version"
-MODULE_NAME="php${PHP_VERSION}"
-#echo "Checking if the module exists"
-echo "PHP module should have been automatically enabled during libapache2-mod-php installation"
-echo "*********** Check and see ***************"
+module_name="php${php_ver}"
+echo "Checking if the module exists"
 
-#if apache2ctl -M | grep -q "${MODULE_NAME}_module"
-#then echo "PHP module ${MODULE_NAME} is already enabled."
-#else
-#echo "Enabling ${MODULE_NAME} module for Apache2..."    
-#a2enmod "${MODULE_NAME}"    
-#echo "Restarting Apache..."
-#systemctl restart apache2
-#sleep 1
-#echo "${MODULE_NAME} module has been enabled and Apache2 has been restarted."
-#fi
+if [[ -f /etc/apache2/mods-available/$module_name.conf ]]
+then :
+else echo -e "\n***ERROR: PHP module missing from apache."
+exit 1
+fi
+
+if [[ -f /etc/apache2/mods-enabled/$module_name.conf ]]
+then echo "php module enabled in apache"
+else echo "attempting to enable module in apache"
+a2enmod $module_name
+sleep 3
+systemctl restart apache2
+sleep 3
+  if [[ -f /etc/apache2/mods-enabled/$module_name.conf ]]
+  then echo "php module enabled in apache"
+  else echo -e "\n***ERROR: Unable to enable php module in apache."
+  exit 1
+  fi
+fi
 
 }
 #
@@ -184,14 +191,24 @@ wget -q $gitLink -P /usr/local/etc/
 
 if [[ -f /usr/local/etc/main.zip ]]
 then :
-else echo "Download failed"
+else echo -e "\n***ERROR:  Download failed. Run installation again."
 exit 1
 fi
 
 unzip -qq -o /usr/local/etc/main.zip -d /usr/local/etc/
-mv /usr/local/etc/LilyPin-main/ /usr/local/etc/RPi-ap
+
+if [[ -d /usr/local/etc/RPi-AP-main ]]
+then :
+else echo -e "\n***ERROR: There was an issue extracting the downloaded .zip file in /usr/local/etc/."
+echo "Run installation again."
+exit 1
+fi
+
+mv /usr/local/etc/RPi-AP-main/ /usr/local/etc/RPi-ap
 rm /usr/local/etc/main.zip
-#rm $rootdir/Lilypin-install.sh
+
+if [[ -d $rootdir ]]
+then echo "Download complete"
 
 if [[ -f $stadir/c_start.sh ]]
 then :
