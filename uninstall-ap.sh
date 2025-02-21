@@ -224,7 +224,7 @@ s
 
   if type unzip &>/dev/null
   then echo "error removing unzip. Try removing manually with sudo apt purge unzip"
-  else -e echo "Uninstalled unzip\n"
+  else echo -e "Uninstalled unzip\n"
   fi
 
 else
