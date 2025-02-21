@@ -92,6 +92,8 @@ systemctl stop hostapd
 systemctl disable hostapd
 systemctl mask hostapd
 systemctl restart dhcpcd
+sleep 3
+systemctl restart dnsmasq
 #systemctl stop dhcpcd.service
 #systemctl stop dnsmasq
 #systemctl start dhcpcd.service
