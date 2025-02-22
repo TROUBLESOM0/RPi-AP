@@ -142,7 +142,7 @@ ask_Install-service () {
 # check service file exists
 
 if [[ ! -f $stadir/$req/$service ]]
-then echo -e "${Error}ERROR${Off} $service is missing!"
+then echo -e "${Error}ERROR${Off} $service is missing!\n"
 exit 1
 else
 chown root:root $stadir/$req/$service
@@ -155,11 +155,11 @@ systemctl enable $service
 # check for errors on service
 echo "checking for errors..."
   if systemctl is-enabled "$service" &>/dev/null
-  then echo "service is enabled"
+  then echo -e "service is enabled\n"
   else
   echo "There was an issue configuring the service '$service'!"
   echo "Run Uninstall script"
-  echo "Then try re-installing"
+  echo -e "Then try re-installing\n"
   exit 1
   fi
 fi
@@ -174,6 +174,7 @@ ask_Log () {
 
 if [[ ! -f /usr/local/etc/RPi-ap/sta-ap/log ]]
 then
+echo -e "Creating log file...\n"
 touch /usr/local/etc/RPi-ap/sta-ap/log
 echo "$(date)---INSTALLATION FOR RPI-AP---" >> /usr/local/etc/RPi-ap/sta-ap/log
 else echo "" >> /usr/local/etc/RPi-ap/sta-ap/log
@@ -210,6 +211,7 @@ rm /usr/local/etc/main.zip
 
 if [[ -d $rootdir ]]
 then echo "Download complete"
+echo "Verifying presence of files..."
 fi
 
 if [[ -f $stadir/c_start.sh ]]
@@ -340,15 +342,15 @@ echo "Checking for previous installation"
 
 if test -d $rootdir
 then rm -r $rootdir
-echo "removed previous installation"
-else echo "No previous installation found. Start initial install"
+echo -e "removed previous installation\n"
+else echo -e "No previous installation found. Start initial install\n"
 fi
 
 echo "Downloading RPI-AP..."
 ask_DL
-echo "Download Complete"
+echo ""
 ask_Log
-echo "Configuring service in systemd..."
+echo -e "\nConfiguring service in systemd..."
 ask_Install-service
 echo -e "\nREBOOTING\n"
 reboot
