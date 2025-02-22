@@ -41,7 +41,7 @@ sleep 1
 
 if type unzip &>/dev/null
 then echo "Installed unzip"
-continue
+return
 else
 echo "unzip installation failed. Try installing manually with sudo apt install unzip"
 exit 1
