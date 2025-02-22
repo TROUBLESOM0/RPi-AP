@@ -293,7 +293,6 @@ return # continues script
 else
 echo -e "\nHostapd is not installed"
 ask_Installhostapd
-echo -e "hostapd install complete\n"
 fi
 
 echo $_break
