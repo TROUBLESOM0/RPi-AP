@@ -9,7 +9,7 @@ echo "1. Perform initial checks to determine required system programs are instal
 echo "2. Download a selection of .bash scripts and save in the location:"
 echo -e "  \033[1;33m/usr/local/etc/RPi-ap\e[0m"
 echo "3. Setup the RPi-ap-check.service into /etc/systemd/system/ folder to run on boot"
-echo "        - this creates a local AP for configuring a wireless connection if none is present"
+echo -e "        - this creates a local AP for configuring a wireless connection if none is present\n"
 #
 #
 # Check script is running as root
@@ -40,7 +40,7 @@ apt install unzip -y -qq > /dev/null
 sleep 1
 
 if type unzip &>/dev/null
-then echo "Installed unzip"
+then echo -e "Installed unzip\n"
 return
 else
 echo "unzip installation failed. Try installing manually with sudo apt install unzip"
@@ -58,7 +58,8 @@ apt install hostapd -y -qq > /dev/null
 sleep 1
 
 if type hostapd &>/dev/null
-then :
+then echo -e "Installed hostapd\n"
+return
 else
 echo "hostapd installation failed. Try installing manually with sudo apt install hostapd"
 exit 1
@@ -119,15 +120,15 @@ exit 1
 fi
 
 if [[ -f /etc/apache2/mods-enabled/$module_name.conf ]]
-then echo "php module enabled in apache"
+then echo -e "php module enabled in apache\n"
 else echo "attempting to enable module in apache"
 a2enmod $module_name
 sleep 3
 systemctl restart apache2
 sleep 3
   if [[ -f /etc/apache2/mods-enabled/$module_name.conf ]]
-  then echo "php module enabled in apache"
-  else echo -e "\n***ERROR: Unable to enable php module in apache."
+  then echo -e "php module enabled in apache\n"
+  else echo -e "\n***ERROR: Unable to enable php module in apache.\n"
   exit 1
   fi
 fi
@@ -274,18 +275,19 @@ chmod u+rwx,g+rx,o+r $rootdir/uninstall-ap.sh
 echo $_break
 
 if type unzip &>/dev/null
-then : # continues script
+then echo -e "\nunzip already installed\n"
+return # continues script
 else
 echo -e "\nUnzip is not installed"
 ask_Installunzip
-echo "unzip install complete"
 fi
 
 echo $_break
 
 # check if hostapd is installed
 if type hostapd &>/dev/null
-then : # continues script
+then echo -e "\nhostapd already installed\n"
+return # continues script
 else
 echo -e "\nHostapd is not installed"
 ask_Installhostapd
@@ -296,7 +298,8 @@ echo $_break
 
 # check if apache2 is installed
 if type apache2 &>/dev/null
-then :
+then echo -e "\napache already installed\n"
+return
 else
 echo -e "\nApache is not installed"
 ask_Installapache2
@@ -308,7 +311,8 @@ echo $_break
 # check if apache php module is installed
 dpkg -l | grep -qw libapache2-mod-php7.4
 if [ $? -eq 0 ] 
-then :
+then echo -e "\nphp-module already installed\n"
+return
 else
 echo -e "\nLibapache2-mod-php7.4 is not installed"
 ask_Installmod-php
