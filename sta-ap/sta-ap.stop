@@ -20,21 +20,25 @@ ap=/var/www/html
 _wpa=/etc/wpa_supplicant/wpa_supplicant.conf
 SSID=$(head -n 1 $ap/login.data)
 PWD=$(sed -n '2p' $ap/login.data)
+
+#
+#############################################
+#              Begin Script                 #
+#############################################
 #check if original files exist
+
 if test -d $bk
-then :
+then echo "Reloading WiFi Credentials"
 else echo "The backup directory is missing. Can't reload files"
-echo "Reloading WiFi Credentials..."
+echo "Loading Default WiFi Credentials..."
 fi
+
 if [[ ! -f $_wpa.bkup ]]
 then echo "missing wpa_supplicant.conf.bkup. Loading defaults..."
 cp $dir/$req/default.wpa_supplicant.conf $_wpa
 else :
 fi
-#
-#############################################
-#              Begin Script                 #
-#############################################
+
 echo "checking for required files..."
 if [[ -f $bk/dhcpcd.conf ]]
 then :
@@ -65,6 +69,7 @@ sudo chmod 640 $_wpa
 echo ""
 else :
 fi
+
 echo "adding new SSID to wpa"
 echo "" >> "$_wpa"
 echo "network={" >> "$_wpa"
