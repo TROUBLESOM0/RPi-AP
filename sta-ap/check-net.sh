@@ -22,7 +22,7 @@ dir=/usr/local/etc/RPi-ap/sta-ap
 ap=/var/www/html
 bk=$dir/pre-sys-bkup
 #
-# chech for required files
+# check for required files
 if [[ -f $dir/sta-ap.start ]]
 then :
 else echo "missing sta-ap.start"
@@ -43,6 +43,7 @@ if [ $? -ne 0 ]
 then
 # If ping fails
 echo "No connection to Google, trying Cloudflare"
+sleep 10
 ping -c 1 1.1.1.1 &> /dev/null
   if [ $? -ne 0 ]
   then
