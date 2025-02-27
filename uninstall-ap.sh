@@ -187,7 +187,7 @@ then systemctl disable RPi-ap-check.service
 s5
 s5
 
-  if [[ -f /etc/systemd/system/RPi-ap-check.service ]]
+  if [[ ! -f /etc/systemd/system/RPi-ap-check.service ]]
   then echo "RPi-ap service removed"
   else echo "Unable to remove service.  Try manually with sudo systemctl disable RPi-ap-check.service"
   fi
