@@ -20,8 +20,6 @@ req=required
 whtml=$dir/web/index.html
 wlogin=$dir/web/login.php
 ap=/var/www/html
-sudo mkdir $dir/pre-sys-bkup
-bk=$dir/pre-sys-bkup
 r=$RANDOM
 line=15
 #
@@ -29,6 +27,15 @@ line=15
 #              Begin Script                 #
 #############################################
 echo "checking for required files..."
+if [[ -d $dir/pre-sys-bkup ]]
+then :
+else mkdir $dir/pre-sys-bkup
+echo "bkup folder created"
+fi
+
+### bkup variable ###
+bk=$dir/pre-sys-bkup
+
 if [[ -f $whtml ]]
 then :
 else echo "missing index.html file in /web folder"
