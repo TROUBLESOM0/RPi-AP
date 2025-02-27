@@ -142,6 +142,12 @@ fi
 ask_Install-service () {
 # check service file exists
 
+if [[ -f /etc/systemd/system/$service ]]
+then echo "removing existing service"
+systemctl disable $service
+else :
+fi
+
 if [[ ! -f $stadir/$req/$service ]]
 then echo -e "${Error}ERROR${Off} $service is missing!\n"
 exit 1
@@ -255,6 +261,14 @@ chmod 440 /etc/sudoers.d/010_RPi-ap
   else echo "***ERROR adding sudoers file***"
   fi
 else echo "sudoers file already exists"
+echo "updating..."
+rm /etc/sudoers.d/010_RPi-ap
+cp $stadir/$req/010_RPi-ap /etc/sudoers.d/010_RPi-ap
+chmod 440 /etc/sudoers.d/010_RPi-ap
+  if [[ -f /etc/sudoers.d/010_RPi-ap ]]
+  then echo "sudoers file updated"
+  else echo "***ERROR updating sudoers file***"
+  fi
 fi
 
 #########################
@@ -279,7 +293,7 @@ echo $_break
 
 if type unzip &>/dev/null
 then echo -e "\nunzip already installed\n"
-return # continues script
+: # continues script
 else
 echo -e "\nUnzip is not installed"
 ask_Installunzip
@@ -290,7 +304,7 @@ echo $_break
 # check if hostapd is installed
 if type hostapd &>/dev/null
 then echo -e "\nhostapd already installed\n"
-return # continues script
+: # continues script
 else
 echo -e "\nHostapd is not installed"
 ask_Installhostapd
@@ -301,7 +315,7 @@ echo $_break
 # check if apache2 is installed
 if type apache2 &>/dev/null
 then echo -e "\napache already installed\n"
-return
+:
 else
 echo -e "\nApache is not installed"
 ask_Installapache2
@@ -314,7 +328,7 @@ echo $_break
 dpkg -l | grep -qw libapache2-mod-php7.4
 if [ $? -eq 0 ] 
 then echo -e "\nphp-module already installed\n"
-return
+:
 else
 echo -e "\nLibapache2-mod-php7.4 is not installed"
 ask_Installmod-php
