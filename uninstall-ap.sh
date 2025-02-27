@@ -1,17 +1,21 @@
 #!/bin/bash
 #
 #
+echo ""
 echo "This will remove all associated files and settings related to RPi-ap"
 echo "And will try to revert back to the original files and settings"
 echo ""
 echo "If an issue occurs, script should provide information on the issue and"
 echo "query whether you want to continue or not."
+echo ""
 echo "----------------------------------------------------------------------"
+echo ""
 echo "FILE/FOLDER REMOVAL :"
-echo "   - RPi-ap/ in /usr/local/etc/ "
+echo "   - /usr/local/etc/RPi-ap/ "
 echo "   - RPi-ap-check.service in /etc/systemd/system/ "
-echo "   - login.php, login.data, index.html in /var/www/html/ "
-echo "   - hostapd.conf in /etc/ "
+echo "   - var/www/html/ login.php and login.data "
+echo "   - /etc/hostpad/hostapd.conf "
+echo '   - /etc/sudoers.d/010_RPi-ap "
 echo ""
 echo "FILE/FOLDER RESTORE :"
 echo "   - login.php, index.html if existed previosly "
@@ -20,8 +24,14 @@ echo "   - dhcpcd.conf in /etc/ "
 echo "   - hostapd.conf in /etc/hostapd/ , only if it existed previously "
 echo ""
 echo "----------------------------------------------------------------------"
-echo "This script will query whether user would like to remove the dependancies"
-echo "  i.e. apache2, unzip, hostapd, libapache2-mod-php"
+echo ""
+echo "This script will query whether user would like to remove:"
+echo "  - apache2 "
+echo ""
+echo "And will automatically try to remove:"
+echo "  - unzip,"
+echo "  - hostapd,"
+echo "  - libapache2-mod-php"
 echo ""
 echo ""
 #
@@ -70,7 +80,7 @@ s5 () { sleep 5; }
 ###    ASK_RPI-AP   ###
 ########################
 ask_RPi-ap () {
-echo -e "Removing RPi-ap Files..."
+echo -e "\nRemoving RPi-ap Files..."
 
 if [[ -d $rootdir ]]
 then rm -r $rootdir
@@ -126,15 +136,20 @@ ask_Dnsmasq () {
 echo "Setting dnsmasq..."
 
 if [[ -f $ff ]]
-then :
-else echo "missing dnsmasq.conf for sta-ap"
-echo "no change made"
-fi
-
+then
 cp $ff $f
 chown root:root $f
 chmod u+rw,g+r,o+r $f
 echo -e "dnsmasq.conf restored from backup\n"
+else
+echo "missing dnsmasq.conf for sta-ap"
+echo "loading default"
+cp $stadir/$req/default/dnsmasq.conf $f
+chown root:root $f
+chmod u+rw,g+r,o+r $f
+echo -e "default dnsmasq.conf loaded\n"
+fi
+
 }
 #
 #######################
@@ -144,15 +159,20 @@ ask_Dhcpcd () {
 echo -e "\nSetting dhcpcd..."
 
 if [[ -f $gg ]]
-then :
-else echo "missing dhcpcd.conf for sta-ap"
-echo "no change made"
-fi
-
+then
 cp $gg $g
 chown root:netdev $g
 chmod u+rw,g+rw,o+r $g
 echo -e "dhcpcd.conf restored from backup\n"
+else
+echo "missing dhcpcd.conf for sta-ap"
+echo "loading default"
+cp $stadir/$req/default/dhcpcd.conf $g
+chown root:netdev $g
+chmod u+rw,g+rw,o+r $g
+echo -e "default dhcpcd.conf loaded\n"
+fi
+
 }
 #
 #######################
@@ -163,7 +183,8 @@ echo -e "\nRemoving system service configuration..."
 
 if [[ -f /etc/systemd/system/RPi-ap-check.service ]]
 then systemctl disable RPi-ap-check.service
-s3
+s5
+s5
 
   if [[ -f /etc/systemd/system/RPi-ap-check.service ]]
   then echo "RPi-ap service removed"
@@ -215,7 +236,7 @@ fi
 ###   UNINSTALL_UNZIP   ###
 ###########################
 ask_Unzip () {
-echo -e "Uninstalling unzip...\n"
+echo -e "\nUninstalling unzip...\n"
 
 if type unzip &>/dev/null
 then apt purge unzip -y -qq > /dev/null
@@ -247,7 +268,8 @@ then echo "checking backups"
   chown www-data:www-data $e
   chmod 644 $e
   echo "index.html restored from backup"
-  else echo "no backup for index.html"
+  else
+  echo "no backup for index.html"
   echo "no change made"
   fi
 
@@ -257,7 +279,8 @@ then echo "checking backups"
   echo "login.php restored from backup"
   chown www-data:www-data $b
   echo "no permission changes made"
-  else echo "no backup for login.php"
+  else
+  echo "no backup for login.php"
   rm $b
   echo "login.php removed"
   fi
@@ -276,7 +299,7 @@ uninstall_apache () {
 if type apache2 &>/dev/null
 then apt purge apache2 -y -qq > /dev/null
 apt autoremove -y -qq > /dev/null
-s
+s5
 
   if type apache2 &>/dev/null
   then echo "ERROR: unable to confirm removal of apache2. Try removing manually with sudo apt purge apache2"
@@ -288,7 +311,7 @@ echo "Unable to determine if the apache2 package is installed or not, but will c
 fi
 
 if [[ -d /etc/apache2 ]]
-then echo -e "\nRemoving leftover apache directory"
+then echo -e "\nRemoving remaining traces of apache2..."
 rm -r /etc/apache2/
 else :
 fi
@@ -349,7 +372,7 @@ echo "It is okay to leave apache installed if you are not going to have a forwar
 read -r -p "Do you want to [Y]uninstall or [N]restore Apache Web Server? Type [Y or N] : " ask_apache_input
 case $ask_apache_input in
 [yY])
-echo "Begin Uninstalling Apache"
+echo -e "\nBegin Uninstalling Apache...\n"
 uninstall_apache
 s
 break
@@ -378,7 +401,7 @@ do
 read -r -p "Do You Want To Uninstall RPi-ap? [Y/n]" ask_start_input
 case $ask_start_input in
 [yY][eE][sS]|[yY])
-echo "Begin Uninstalling RPi-ap"
+echo -e "\nBegin Uninstalling RPi-ap\n"
 s
 ask_Apache
 s
@@ -396,15 +419,20 @@ ask_Hostapd
 s
 ask_Sudoers
 s
-echo "Restarting Network"
-systemctl stop hostapd
+echo "Restarting network..."
+
+if type hostapd &>/dev/null
+then systemctl stop hostapd
 systemctl disable hostapd
 systemctl mask hostapd
+else :
+fi
+
 systemctl restart dhcpcd
 s
 ask_RPi-ap
 s
-echo -e "RPi-ap uninstall complete\n"
+echo -e "\nRPi-ap uninstall complete\n"
 echo -e "\nMay need to reboot in order to complete the network reconfiguration\n"
 break
 ;;
