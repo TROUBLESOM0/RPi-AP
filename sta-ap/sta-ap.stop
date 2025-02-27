@@ -120,13 +120,17 @@ echo "COMPLETED AP STOP"
 
 # TEST INTERNET ACCESS AGAIN #
 echo "Testing internet access"
-sleep 30
 ping -c 1 8.8.8.8 &> /dev/null
-
 if [ $? -ne 0 ]
-then echo "Still no internet access. Running Check again"
-reboot now
-else echo "Internet connected."
+then echo "Still no internet access. Testing  again"
+systemctl restart wpa_supplicant.service
+sleep 10
+ping -c 1 8.8.8.8 &> /dev/null
+  if [ $? -ne 0 ]
+  then echo "Still no internet. Rebooting"
+  reboot now
+  else echo "Internet finally connected."
+  fi
+else echo "Internet connected. Ending"
 fi
-
 exit 0
