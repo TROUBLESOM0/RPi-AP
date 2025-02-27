@@ -465,5 +465,6 @@ fi
 ask_Start
 
 echo "REBOOTING"
+reboot
 exit 0
 #########################################
