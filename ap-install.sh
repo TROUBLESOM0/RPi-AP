@@ -90,7 +90,8 @@ fi
 ###   ASK_INSTALLMOD-PHP   ###
 ##############################
 ask_Installmod-php () {
-echo "Installing libapache2-mod-php7.4"
+echo "Installing libapache2-mod-php"
+apt search libapache2-mod-php -qq | grep 7.3 2>/dev/null
 sleep 1
 apt install libapache2-mod-php7.4 -y -qq > /dev/null
 sleep 1
@@ -287,6 +288,10 @@ chmod u+rwx,g+rx,o+r $rootdir/uninstall-ap.sh
 ############################
 #      Initial Checks      #
 ############################
+echo "Starting initial checks...
+# update apt
+apt update -qq 2>/dev/null
+
 # check if unzip is installed
 
 echo $_break
