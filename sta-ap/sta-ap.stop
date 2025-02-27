@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# sta-ap.stop v.1
 # Configuration script to REVERT Pi Zero W from Local Access Point
 # https://gist.github.com/TROUBLESOM0/037d73d7e858ca9b37d9b27ee0591b34
 #
@@ -8,7 +9,7 @@
 if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
-else echo "Stopping AP!"
+else echo "RUNNING AP STOP"
 fi
 #
 ### VARIABLES ###
@@ -27,31 +28,6 @@ PWD=$(sed -n '2p' $ap/login.data)
 #############################################
 #check if original files exist
 
-if test -d $bk
-then echo "Reloading WiFi Credentials"
-else echo "The backup directory is missing. Can't reload files"
-echo "Loading Default WiFi Credentials..."
-fi
-
-if [[ ! -f $_wpa.bkup ]]
-then echo "missing wpa_supplicant.conf.bkup. Loading defaults..."
-cp $dir/$req/default.wpa_supplicant.conf $_wpa
-else :
-fi
-
-echo "checking for required files..."
-if [[ -f $bk/dhcpcd.conf ]]
-then :
-else echo "missing dhcpcd.conf for sta-ap"
-exit 1
-fi
-
-if [[ -f $bk/dnsmasq.conf ]]
-then :
-else echo "missing dnsmasq.conf for sta-ap"
-exit 1
-fi
-
 if [[ -f $ap/login.data ]]
 then :
 else echo "login.data missing from sta-ap.stop"
@@ -59,38 +35,75 @@ echo "check Wifi Login"
 exit 1
 fi
 
+if test -d $bk
+then echo "Reloading WiFi Credentials"
+else echo "The backup directory is missing. Can't reload files"
+echo "Loading Default WiFi Credentials..."
+mkdir $bk
+fi
+
+if [[ ! -f $_wpa ]]
+then echo "missing wpa_supplicant.conf. Loading defaults..."
+cp $dir/$req/default.wpa_supplicant.conf $_wpa
+else :
+fi
+
+if [[ ! -f $_wpa.bkup ]]
+then echo "missing wpa_supplicant.conf.bkup. Making copy..."
+cp $_wpa $_wpa.bkup
+else :
+fi
+
+echo "checking for required files..."
+if [[ -f $bk/dhcpcd.conf ]]
+then :
+else echo "missing dhcpcd.conf for sta-ap"
+cp $dir/$req/default/dhcpcd.conf $bk/dhcpcd.conf
+fi
+
+if [[ -f $bk/dnsmasq.conf ]]
+then :
+else echo "missing dnsmasq.conf for sta-ap"
+cp $dir/$req/default/dnsmasq.conf $bk/dnsmasq.conf
+fi
+
 #wpa_supplicant
 echo "restoring wpa_supplicant..."
 
 if [[ -f $_wpa.bkup ]]
-then echo "Setting wpa_supplicant"
+then echo -e "Setting wpa_supplicant\n"
 sudo chown root:root $_wpa
 sudo chmod 640 $_wpa
-echo ""
 else :
 fi
 
-echo "adding new SSID to wpa"
+echo -e "Adding new SSID to wpa\n"
 echo "" >> "$_wpa"
 echo "network={" >> "$_wpa"
 echo "        ssid=\"$SSID\"" >> "$_wpa"
 echo "        psk=\"$PWD\"" >> "$_wpa"
 echo "}" >> "$_wpa"
+# backup wpa
+cp -p $_wpa $_wpa.bkup
 #
-echo "restoring system files..."
+echo -e "restoring system files...\n"
+
 #dhcpcd
 cp $bk/dhcpcd.conf /etc/
 chown root:netdev /etc/dhcpcd.conf
 chmod u+rw,g+rw,o+r /etc/dhcpcd.conf
+
 #dnsmasq
 cp $bk/dnsmasq.conf /etc/
 chown root:root /etc/dnsmasq.conf
 chmod u+rw,g+r,o+r /etc/dnsmasq.conf
+
 #hostapd
 if [[ -f $bk/hostapd.conf ]]
 then cp $bk/hostapd.conf /etc/hostapd/
 else rm /etc/hostapd/hostapd.conf
 fi
+
 # config hostapd
 echo "setting network"
 systemctl stop hostapd
@@ -99,24 +112,21 @@ systemctl mask hostapd
 systemctl restart dhcpcd
 sleep 3
 systemctl restart dnsmasq
-#systemctl stop dhcpcd.service
-#systemctl stop dnsmasq
-#systemctl start dhcpcd.service
-#systemctl start dnsmasq
+
 # remove files
-echo "removing backup & login.data"
-echo "NOT REMOVING BACKUP THIS TIME"
-#rm -r $bk/
+echo -e "\nremoving login.data"
 rm $ap/login.data
-# DONE - REBOOT
-echo "COMPLETE AP STOP"
-sleep 30
-##### TESTING NETWORK AND RUN CHECK AGAIN IF NOT #################
+echo "COMPLETED AP STOP"
+
+# TEST INTERNET ACCESS AGAIN #
 echo "Testing internet access"
+sleep 30
 ping -c 1 8.8.8.8 &> /dev/null
+
 if [ $? -ne 0 ]
 then echo "Still no internet access. Running Check again"
 reboot now
-else echo "Internet connected. Ending"
+else echo "Internet connected."
 fi
+
 exit 0
