@@ -91,11 +91,33 @@ fi
 ##############################
 ask_Installmod-php () {
 echo "Installing libapache2-mod-php"
-apt search libapache2-mod-php -qq | grep 7.3 2>/dev/null
+apt-cache show libapache2-mod-php7.4 2>/dev/null | grep Version 2>/dev/null > /dev/null
+
+if [ $? -eq 0 ]
+then
+pV=7.4
+else
+apt-cache show libapache2-mod-php7.3 2>/dev/null | grep Version 2>/dev/null > /dev/null
+  if [ $? -eq 0 ]
+  then
+  pV=7.3
+  else
+  apt-cache show libapache2-mod-php7.2 2>/dev/null | grep Version 2>/dev/null > /dev/null
+    if [ $? -eq 0 ]
+    then
+    pV=7.2
+    else
+    echo -e "\nERROR: No Available Package for libapache2-mod-php"
+    echo -e "Must be 7.4, 7.3, or 7.2\n"
+    echo -e "Exiting.\n"
+    exit 1
+    fi 
+  fi
+fi
+
+apt install libapache2-mod-php$pV -y -qq > /dev/null
 sleep 1
-apt install libapache2-mod-php7.4 -y -qq > /dev/null
-sleep 1
-dpkg -l | grep -qw libapache2-mod-php7.4
+dpkg -l | grep -qw libapache2-mod-php$pV
 
 if [ $? -eq 0 ] 
 then :
@@ -330,26 +352,26 @@ fi
 echo $_break
 
 # check if apache php module is installed
-dpkg -l | grep -qw libapache2-mod-php7.4
+dpkg -l | grep -qw libapache2-mod-php | grep -E "7.4|7.3|7.2"
 if [ $? -eq 0 ] 
 then echo -e "\nphp-module already installed\n"
 :
 else
-echo -e "\nLibapache2-mod-php7.4 is not installed"
+echo -e "\nLibapache2-mod-php is not installed"
 ask_Installmod-php
-echo -e "libapache2-mod-php7.4 install complete\n"
+echo -e "libapache2-mod-php install complete\n"
 fi
 
 echo $_break
 
 # load apache php module
-dpkg -l | grep -qw libapache2-mod-php7.4
+dpkg -l | grep -qw libapache2-mod-php | grep -E "7.4|7.3|7.2"
 if [ $? -eq 0 ]
 then echo -e "\nLoading apache php module"
 ask_Loadmod-php
 echo -e "\nInitial Checks Complete\n"
 else
-echo -e "\nERROR: libapache2-mod-php7.4 was not installed\n"
+echo -e "\nERROR: libapache2-mod-php was not installed\n"
 fi
 
 #
