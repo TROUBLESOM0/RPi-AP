@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# uninstall-ap.sh v.1
 #
 echo ""
 echo "This will remove all associated files and settings related to RPi-ap"
