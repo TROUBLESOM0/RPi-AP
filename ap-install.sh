@@ -310,7 +310,7 @@ chmod u+rwx,g+rx,o+r $rootdir/uninstall-ap.sh
 ############################
 #      Initial Checks      #
 ############################
-echo "Starting initial checks...
+echo "Starting initial checks..."
 # update apt
 apt update -qq 2>/dev/null
 
