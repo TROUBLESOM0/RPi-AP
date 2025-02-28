@@ -57,6 +57,8 @@ e=$ap/index.html
 f=/etc/dnsmasq.conf
 g=/etc/dhcpcd.conf
 h=libapache2-mod-php7.4
+hh=libapache2-mod-php7.3
+hhh=libapache2-mod-php7.2
 j=apache2-doc
 k=apache2-bin
 #
@@ -345,7 +347,31 @@ s
   else echo "Uninstalled $h"
   fi
 
-else "Unable to verify that the package $h is installed or not, but will continue processing."
+else
+  if dpkg -l | grep -qw $hh
+  then apt purge $hh -y -qq > /dev/null
+  apt autoremove -y -qq > /dev/null
+  s
+
+    if dpkg -l | grep -qw $hh
+    then echo "There was an issue removing $hh.  Try removing manually with sudo apt purge $hh"
+    else echo "Uninstalled $hh"
+    fi
+
+  else
+    if dpkg -l | grep -qw $hhh
+    then apt purge $hhh -y -qq > /dev/null
+    apt autoremove -y -qq > /dev/null
+    s
+
+      if dpkg -l | grep -qw $hhh
+      then echo "There was an issue removing $hhh.  Try removing manually with sudo apt purge $hhh"
+      else echo "Uninstalled $hhh"
+      fi
+
+    else "Unable to verify that the package $h, $hh, or $hhh is installed or not, but will continue processing."
+    fi
+  fi
 fi
 
 if dpkg -l | grep -qw $j
