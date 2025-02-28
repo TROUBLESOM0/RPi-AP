@@ -460,7 +460,7 @@ s
 ask_RPi-ap
 s
 echo -e "\nRPi-ap uninstall complete\n"
-echo -e "\nMay need to reboot in order to complete the network reconfiguration\n"
+echo -e "\nRebooting to finish network changes...\n"
 break
 ;;
 [nN][oO]|[nN])
