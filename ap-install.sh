@@ -122,7 +122,7 @@ dpkg -l | grep -qw libapache2-mod-php$pV
 if [ $? -eq 0 ] 
 then :
 else
-echo "apache php module installation failed. Try installing manually with sudo apt install libapache2-mod-php7.4"
+echo "apache php module installation failed. Try installing manually with sudo apt install libapache2-mod-php$pV"
 exit 1
 fi
 
@@ -314,10 +314,9 @@ echo "Starting initial checks..."
 # update apt
 apt update -qq 2>/dev/null >/dev/null
 
-# check if unzip is installed
-
 echo $_break
 
+# check if unzip is installed
 if type unzip &>/dev/null
 then echo -e "\nunzip already installed\n"
 : # continues script
@@ -359,19 +358,20 @@ then echo -e "\nphp-module already installed\n"
 else
 echo -e "\nLibapache2-mod-php is not installed"
 ask_Installmod-php
-echo -e "libapache2-mod-php install complete\n"
+echo -e "libapache2-mod-php$pV install complete\n"
 fi
 
 echo $_break
 
 # load apache php module
-dpkg -l | grep -qw libapache2-mod-php | grep -E "7.4|7.3|7.2"
+#dpkg -l | grep -qw libapache2-mod-php | grep -E "7.4|7.3|7.2"
+dpkg -l | grep -qw libapache2-mod-php$pV
 if [ $? -eq 0 ]
 then echo -e "\nLoading apache php module"
 ask_Loadmod-php
 echo -e "\nInitial Checks Complete\n"
 else
-echo -e "\nERROR: libapache2-mod-php was not installed\n"
+echo -e "\nERROR: libapache2-mod-php$pV was not installed\n"
 fi
 
 #
