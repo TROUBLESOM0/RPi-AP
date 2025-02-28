@@ -369,7 +369,7 @@ else
       else echo "Uninstalled $hhh"
       fi
 
-    else "Unable to verify that the package $h, $hh, or $hhh is installed or not, but will continue processing."
+    else echo "Unable to verify that the package $h, $hh, or $hhh is installed or not, but will continue processing."
     fi
   fi
 fi
@@ -384,7 +384,7 @@ s
   else echo "Uninstalled $j"
   fi
 
-else "Unable to verify that the package $j is installed or not, but will continue processing."
+else echo "Unable to verify that the package $j is installed or not, but will continue processing."
 fi
 
 }
