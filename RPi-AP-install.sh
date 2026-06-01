@@ -326,7 +326,7 @@ chmod u+rwx,g+rx,o+r $uninstall_ap
 #      Package_Checks      #
 ############################
 Package_Checks () {
-echo "Starting initial checks..."
+echo "Checking dependencies..."
 
 echo $_break
 
@@ -399,7 +399,7 @@ then return
 else echo "RPi-AP appears to already be installed on this device."
 fi
 
-read -p "Do you want re-install? [y/n]" install_input
+read -p "Do you want delete and re-install? [y/n]" install_input
 #convert to lowercase
 if [[ "${install_input,,}" == "y" || "${install_input,,}" == "yes" ]]
 then 
@@ -408,7 +408,6 @@ then
 #
 else exit 0
 fi
-
 
 }
 #
