@@ -28,6 +28,13 @@ fi
 #################
 rootdir=/usr/local/etc/RPi-AP
 stadir=$rootdir/sta-ap
+start_ap=$stadir/sta-ap.start
+stop_ap=$stadir/sta-ap.stop
+install_ap=$rootdir/RPi-AP-install.sh
+uninstall_ap=$rootdir/uninstall-ap.sh
+c_start=$stadir/c_start.sh
+check_net=$stadir/check-net.sh
+run_check=$stadir/web/run-check.sh
 req=required
 whtml=$stadir/web/index.html
 wlogin=$stadir/web/login.php
@@ -307,8 +314,8 @@ fi
 #########################
 chmod u+x,g+x $stadir/c_start.sh
 chmod u+x,g+x $stadir/check-net.sh
-chmod u+x,g+x $stadir/sta-ap.start
-chmod u+x,g+x $stadir/sta-ap.stop
+chmod u+x,g+x $stadir/$start_ap
+chmod u+x,g+x $stadir/$stop_ap
 chown root:www-data $stadir/web/run-check.sh
 chmod u+rw,g+rx,o+r $stadir/web/run-check.sh
 chmod u+rwx,g+rx,o+r $rootdir/uninstall-ap.sh
@@ -316,7 +323,7 @@ chmod u+rwx,g+rx,o+r $rootdir/uninstall-ap.sh
 }
 #
 ############################
-#      Package Checks      #
+#      Package_Checks      #
 ############################
 Package_Checks () {
 echo "Starting initial checks..."
@@ -383,10 +390,24 @@ fi
 
 }
 #
-##################################
-#       ASK_CHECK-VERSION        #
-##################################
-ask_Check-Version () {
+###################################
+#       ASK_CHECK-PREVIOUS        #
+###################################
+ask_Check-Previous () {
+if test ! -f $stadir/$start_ap
+then return
+else echo "RPi-AP appears to already be installed on this device."
+fi
+
+read -p "Do you want re-install? [y/n]" install_input
+#convert to lowercase
+if [[ "${install_input,,}" == "y" || "${install_input,,}" == "yes" ]]
+then 
+#
+#    COMMAND TO REMOVE RPi-AP
+#
+else exit 0
+fi
 
 
 }
@@ -424,7 +445,7 @@ fi
 echo "Starting Installation..."
 
 ask_Check-OS
-ask_Check-Version
+ask_Check-Previous
 Package_Checks
 
 echo "Checking for previous installation"
