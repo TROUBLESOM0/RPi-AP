@@ -1,16 +1,20 @@
 #!/bin/bash
 #
-# ap-install.sh v.1
+# RPi-AP-install.sh v.1
 #
-echo "This will install a Local Access Point"
-echo "for connecting to a WiFi Access Point"
-echo "via a web browser interface."
-echo "This script will perform the following actions:"
-echo "1. Perform initial checks to determine required system programs are installed or present"
-echo "2. Download a selection of .bash scripts and save in the location:"
-echo -e "  \033[1;33m/usr/local/etc/RPi-ap\e[0m"
-echo "3. Setup the RPi-ap-check.service into /etc/systemd/system/ folder to run on boot"
-echo -e "        - this creates a local AP for configuring a wireless connection if none is present\n"
+echo "######################################################################################################"
+echo "##    This will install a Local Access Point                                                        ##"
+echo "##      for connecting to a WiFi Access Point                                                       ##"
+echo "##      via a web browser interface.                                                                ##"
+echo "##                                                                                                  ##"
+echo "##    This script will perform the following actions:                                               ##"
+echo "##    1. Perform initial checks to determine required system programs are installed or present      ##"
+echo "##    2. Download a selection of .bash scripts and save in the location:                            ##"
+echo -e "##      \033[1;33m/usr/local/etc/RPi-AP\e[0m                                                     ##"
+echo "##    3. Setup the RPi-ap-check.service into /etc/systemd/system/ folder to run on boot             ##"
+echo -e "##      - this creates a local AP for configuring a wireless connection if none is present\n     ##"
+echo "######################################################################################################"
+echo -e "\n\n"
 #
 #
 # Check script is running as root
@@ -22,13 +26,17 @@ fi
 #
 ### VARIABLES ###
 #################
-rootdir=/usr/local/etc/RPi-ap
-stadir=/usr/local/etc/RPi-ap/sta-ap
+rootdir=/usr/local/etc/RPi-AP
+stadir=$rootdir/sta-ap
 req=required
 whtml=$stadir/web/index.html
 wlogin=$stadir/web/login.php
 ap=/var/www/html
+
+# Change to latest release
 gitLink="https://github.com/TROUBLESOM0/RPi-AP/archive/refs/heads/main.zip"
+
+
 service=RPi-ap-check.service
 _break="---------------"
 
@@ -308,11 +316,10 @@ chmod u+rwx,g+rx,o+r $rootdir/uninstall-ap.sh
 }
 #
 ############################
-#      Initial Checks      #
+#      Package Checks      #
 ############################
+Package_Checks () {
 echo "Starting initial checks..."
-# update apt
-apt update -qq 2>/dev/null >/dev/null
 
 echo $_break
 
@@ -374,11 +381,52 @@ else
 echo -e "\nERROR: libapache2-mod-php$pV was not installed\n"
 fi
 
+}
+#
+##################################
+#       ASK_CHECK-VERSION        #
+##################################
+ask_Check-Version () {
+
+
+}
+#
+##########################
+#      ask_Check-OS      #
+##########################
+ask_Check-OS () {
+if [[ -f /etc/os-release ]]
+then :
+else
+echo "++Unable to get OS Version from os-release++"
+echo -e "++Will continue but may have compatibility issues++\n"
+fi
+
+os_version=$(cat /etc/os-release | grep VERSION_CODENAME | cut -d '=' -f2)
+
+if [[ $os_version = "buster" ]]
+then echo -e "OS Version: Buster (compatible)\n"
+elif [[ $os_version = "bullseye" ]]
+then echo -e "OS Version: Bullseye (compatible)\n"
+elif [[ $os_version = "bookworm" ]]
+then echo -e "OS Version: Bookworm (compatible)\n"
+elif [[ $os_version = "" ]]
+then echo "OS Version (not-found): $os_version (non-compatible)"
+echo -e "Will continue installation, but may be issues\n"
+else echo -e "OS Version: $os_version may not be compatible, but will continue installation\n"
+fi
+
+}
 #
 #############################################
 #              Begin Script                 #
 #############################################
 echo "Starting Installation..."
+
+ask_Check-OS
+ask_Check-Version
+Package_Checks
+
 echo "Checking for previous installation"
 
 if test -d $rootdir
