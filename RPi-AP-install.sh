@@ -312,13 +312,13 @@ fi
 #########################
 # Configure Permissions #
 #########################
-chmod u+x,g+x $stadir/c_start.sh
-chmod u+x,g+x $stadir/check-net.sh
-chmod u+x,g+x $stadir/$start_ap
-chmod u+x,g+x $stadir/$stop_ap
-chown root:www-data $stadir/web/run-check.sh
-chmod u+rw,g+rx,o+r $stadir/web/run-check.sh
-chmod u+rwx,g+rx,o+r $rootdir/uninstall-ap.sh
+chmod u+x,g+x $c_start
+chmod u+x,g+x $check_net
+chmod u+x,g+x $start_ap
+chmod u+x,g+x $stop_ap
+chown root:www-data $run_check
+chmod u+rw,g+rx,o+r $run_check
+chmod u+rwx,g+rx,o+r $uninstall_ap
 
 }
 #
