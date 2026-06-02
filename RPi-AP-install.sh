@@ -17,15 +17,11 @@ echo "##########################################################################
 echo -e "\n\n"
 #
 #
-# Check script is running as root
-if [[ $( whoami ) != "root" ]]
-then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
-exit 1
-fi
-#
 #
 ### VARIABLES ###
 #################
+Error='\033[1;31m'   # Bold red
+Off='\033[0m'
 rootdir=/usr/local/etc/RPi-AP
 stadir=$rootdir/sta-ap
 start_ap=$stadir/sta-ap.start
@@ -47,42 +43,7 @@ gitLink="https://github.com/TROUBLESOM0/RPi-AP/archive/refs/heads/main.zip"
 service=RPi-ap-check.service
 _break="---------------"
 
-############################
-###   ASK_INSTALLUNZIP   ###
-############################
-ask_Installunzip () {
-echo "Installing unzip"
-apt install unzip -y -qq > /dev/null
-sleep 1
-
-if type unzip &>/dev/null
-then echo -e "Installed unzip\n"
-return
-else
-echo "unzip installation failed. Try installing manually with sudo apt install unzip"
-exit 1
-fi
-
-}
-# 
-############################
-###   ASK_INSTALLHOSTAPD   ###
-############################
-ask_Installhostapd () {
-echo "Installing hostapd"
-apt install hostapd -y -qq > /dev/null
-sleep 1
-
-if type hostapd &>/dev/null
-then echo -e "Installed hostapd\n"
-return
-else
-echo "hostapd installation failed. Try installing manually with sudo apt install hostapd"
-exit 1
-fi
-
-}
-# 
+#
 ##############################
 ###   ASK_INSTALLAPACHE2   ###
 ##############################
@@ -321,6 +282,42 @@ chmod u+rw,g+rx,o+r $run_check
 chmod u+rwx,g+rx,o+r $uninstall_ap
 
 }
+# 
+############################
+###   ASK_INSTALLHOSTAPD   ###
+############################
+ask_Installhostapd () {
+echo "Installing hostapd"
+apt install hostapd -y -qq > /dev/null
+sleep 1
+
+if type hostapd &>/dev/null
+then echo -e "Installed hostapd\n"
+return
+else
+echo -e "${Error}ERROR${Off} hostapd installation failed. Try installing manually with \"sudo apt install hostapd\" and run again"
+exit 1
+fi
+
+}
+#
+############################
+###   ASK_INSTALLUNZIP   ###
+############################
+ask_Installunzip () {
+echo "Installing unzip"
+apt install unzip -y -qq > /dev/null
+sleep 1
+
+if type unzip &>/dev/null
+then echo -e "Installed unzip\n"
+return
+else
+echo -e "${Error}ERROR${Off} unzip installation failed. Try installing manually with \"sudo apt install unzip\" and run again"
+exit 1
+fi
+
+}
 #
 ############################
 #      Package_Checks      #
@@ -385,7 +382,7 @@ then echo -e "\nLoading apache php module"
 ask_Loadmod-php
 echo -e "\nInitial Checks Complete\n"
 else
-echo -e "\nERROR: libapache2-mod-php$pV was not installed\n"
+echo -e "${Error}ERROR${Off} libapache2-mod-php$pV was not installed\n"
 fi
 
 }
@@ -411,14 +408,27 @@ fi
 
 }
 #
+#################
+###  ASK_NET  ###
+#################
+ask_Net () {
+ping -c 1 8.8.8.8 &> /dev/null
+if [ $? -ne 0 ]
+then echo "Internet Is Required!!!"
+exit 0
+else :
+fi
+}
+#
 ##########################
 #      ask_Check-OS      #
 ##########################
 ask_Check-OS () {
+echo 
 if [[ -f /etc/os-release ]]
 then :
 else
-echo "++Unable to get OS Version from os-release++"
+echo -e "${Error}ERROR${Off} Unable to get OS Version from os-release++"
 echo -e "++Will continue but may have compatibility issues++\n"
 fi
 
@@ -441,9 +451,15 @@ fi
 #############################################
 #              Begin Script                 #
 #############################################
+# Check script is running as root
+if [[ $( whoami ) != "root" ]]
+then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
+exit 1
+fi
 echo "Starting Installation..."
 
 ask_Check-OS
+ask_Net
 ask_Check-Previous
 Package_Checks
 
