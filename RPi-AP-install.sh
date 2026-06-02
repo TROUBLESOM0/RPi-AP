@@ -23,6 +23,7 @@ echo -e "\n\n"
 Error='\033[1;31m'   # Bold red
 Off='\033[0m'
 rootdir=/usr/local/etc/RPi-AP
+bkupdir=$rootdir/BACKUPS
 stadir=$rootdir/sta-ap
 start_ap=$stadir/sta-ap.start
 stop_ap=$stadir/sta-ap.stop
@@ -301,6 +302,24 @@ fi
 
 }
 #
+###########################
+###   ASK_INSTALLCURL   ###
+###########################
+ask_Installcurl () {
+echo "Installing curl"
+apt install curl -y -qq > /dev/null
+sleep 1
+
+if type curl &>/dev/null
+then echo -e "Installed curl\n"
+return
+else
+echo -e "${Error}ERROR${Off} curl installation failed. Try installing manually with \"sudo apt install curl\" and run again"
+exit 1
+fi
+
+}
+#
 ############################
 ###   ASK_INSTALLUNZIP   ###
 ############################
@@ -336,12 +355,21 @@ echo -e "\nUnzip is not installed"
 ask_Installunzip
 fi
 
+# check if curl is installed
+if type curl &>/dev/null
+then echo -e "\ncurl already installed\n"
+: # continues script
+else
+echo -e "\ncurl is not installed"
+ask_Installcurl
+fi
+
 echo $_break
 
 # check if hostapd is installed
 if type hostapd &>/dev/null
 then echo -e "\nhostapd already installed\n"
-: # continues script
+# MAKE BACKUP
 else
 echo -e "\nHostapd is not installed"
 ask_Installhostapd
