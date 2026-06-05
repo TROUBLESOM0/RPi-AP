@@ -368,8 +368,10 @@ echo $_break
 
 # check if hostapd is installed
 if type hostapd &>/dev/null
-then echo -e "\nhostapd already installed\n"
-# MAKE BACKUP
+then echo -e "\nHostapd already installed\n"
+# FIGURE OUT HOW TO GET /DEPLOY/HOSTAPDBKUP ON DEVICE
+# CHECK FOR /DEPLOY/HOSTAPDBKUP.SH AND RUN IT
+# IT SHOULD END THIS SCRIPT ON FAILURE
 else
 echo -e "\nHostapd is not installed"
 ask_Installhostapd
