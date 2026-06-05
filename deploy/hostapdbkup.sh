@@ -6,6 +6,9 @@ USER=${SUDO_USER:-$USER}
 SOURCE_FOLDER="/etc/hostapd"
 BACKUP_FOLDER="/home/$USER/RPi-AP_backup_storage/hostapd_bkup"
 
+# PULL ROOTDIR VARIABLE FROM MAIN SCRIPT
+# PULL BACKUPDIR VARIABLE FROM MAIN SCRIPT
+
 if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
