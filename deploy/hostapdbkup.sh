@@ -1,48 +1,57 @@
 #!/bin/bash
+Error='\033[1;31m'   # Bold red
+Off='\033[0m'
 DATE=$(date +%Y%m%d)
 USER=${SUDO_USER:-$USER}
-BKHOSTAPD="/home/$USER/bkuphost/hostapd_bkup"
+SOURCE_FOLDER="/etc/hostapd"
+BACKUP_FOLDER="/home/$USER/RPi-AP_backup_storage/hostapd_bkup"
 
 if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
 fi
 
-if [ -d /etc/hostapd ]
-then echo "hostapd folder exists"
+echo "---------------------------------"
+echo "    Backing Up $SOURCE_FOLDER    "
+echo -e "-------------------------------\n"
 
-  if [ ! -d $BKHOSTAPD ]
-  then echo "bkup doesn't exist"
-  sudo -u $USER mkdir -p $BKHOSTAPD/
+if [ -d SOURCE_FOLDER ]
+then echo "Found $SOURCE_FOLDER folder"
 
-    if [ -d $BKHOSTAPD ]
-    then echo "successfully created bkuphost folder"
-    echo "copying hostapd"
-    cp -a /etc/hostapd $BKHOSTAPD/
-    echo "ran the copy command"
+  if [ ! -d $BACKUP_FOLDER ]
+  then echo "Creating backup folder in $BACKUP_FOLDER"
+  sudo -u $USER mkdir -p $BACKUP_FOLDER/
 
-      if [ ! -d $BKHOSTAPD/hostapd ]
-      then echo "Failed to copy hostapd folder"
+    if [ -d $BACKUP_FOLDER ]
+    then echo "Copying $SOURCE_FOLDER"
+    cp -a $SOURCE_FOLDER $BACKUP_FOLDER/
+
+      if [ ! -d $BACKUP_FOLDER/hostapd ]
+      then echo -e "\n${Error}ERROR${Off} Failed to copy $SOURCE_FOLDER folder"
+      echo "   Exiting..."
       exit 1
-      else echo "Successfully copied hostapd folder"
+      else echo "Successfully copied $SOURCE_FOLDER folder"
       fi
 
-    else echo "faild to makd backeup folder"
+    else echo -e "\n${Error}ERROR${Off} Failed to create $BACKUP_FOLDER folder"
+    echo "   Exiting..."
     exit 1
     fi
 
-  else echo "bkup folder already exists"
+  else echo "Found a previous backup..."
 
-    if [ -d $BKHOSTAPD* ]
-    then echo "hostapd alredy been backed up"
-    echo "making new bakup  hostapd${DATE}"
-    sudo -u $USER mkdir -p $BKHOSTAPD$DATE
-    cp -a /etc/hostapd $BKHOSTAPD$DATE/
-    else echo "making new bkup"
-    cp -a /etc/hostapd $BKHOSTAPD$DATE/
+    if [ -d $BACKUP_FOLDER* ]
+    then echo "$SOURCE_FOLDER was previously backed up"
+    echo "Appending ${DATE} to new backup"
+    sudo -u $USER mkdir -p $BACKUP_FOLDER$DATE
+    cp -a $SOURCE_FOLDER $BACKUP_FOLDER$DATE/
+    else echo "Copying $SOURCE_FOLDER"
+    cp -a $SOURCE_FOLDER $BACKUP_FOLDER$DATE/
     fi
 
   fi
 
-else echo "hostapd appears not be installed"
+else echo -e "\n${Error}ERROR${Off} Unable to locate $SOURCE_FOLDER"
+echo "   Exiting..."
+exit 1
 fi
