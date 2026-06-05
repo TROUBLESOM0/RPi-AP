@@ -303,18 +303,18 @@ fi
 }
 #
 ###########################
-###   ASK_INSTALLCURL   ###
+###   ASK_INSTALLWGET   ###
 ###########################
-ask_Installcurl () {
-echo "Installing curl"
-apt install curl -y -qq > /dev/null
+ask_Installwget () {
+echo "Installing wget"
+apt install wget -y -qq > /dev/null
 sleep 1
 
-if type curl &>/dev/null
-then echo -e "Installed curl\n"
+if type wget &>/dev/null
+then echo -e "Installed wget\n"
 return
 else
-echo -e "${Error}ERROR${Off} curl installation failed. Try installing manually with \"sudo apt install curl\" and run again"
+echo -e "${Error}ERROR${Off} wget installation failed. Try installing manually with \"sudo apt install wget\" and run again"
 exit 1
 fi
 
@@ -356,12 +356,12 @@ ask_Installunzip
 fi
 
 # check if curl is installed
-if type curl &>/dev/null
-then echo -e "\ncurl already installed\n"
+if type wget &>/dev/null
+then echo -e "\nwget already installed\n"
 : # continues script
 else
-echo -e "\ncurl is not installed"
-ask_Installcurl
+echo -e "\nwget is not installed"
+ask_Installwget
 fi
 
 echo $_break
@@ -472,10 +472,30 @@ elif [[ $os_version = "bookworm" ]]
 then echo -e "OS Version: Bookworm (compatible)\n"
 elif [[ $os_version = "" ]]
 then echo "OS Version (not-found): $os_version (non-compatible)"
-echo -e "Will continue installation, but may be issues\n"
-else echo -e "OS Version: $os_version may not be compatible, but will continue installation\n"
+read -r -p "Do you still want to continue... (y/n)" incompatible_input
+  if [[ ${incompatible_input,,} == "y" || ${incompatible_input,,} == "yes" ]]
+  then :
+  else exit 0
+  fi
+else echo -e "OS Version: $os_version may not be compatible\n"
+read -r -p "Do you still want to continue... (y/n)" incompatible_input
+  if [[ ${incompatible_input,,} == "y" || ${incompatible_input,,} == "yes" ]]
+  then :
+  else exit 0
+  fi
 fi
 
+}
+#
+######################
+#      ask_Start     #
+######################
+ask_Start () {
+read -r -p "Do you want to begin installation of RPi-AP" start_input
+if [[ ${start_input,,} == "y" || ${start_input,,} == "yes" ]]
+then :
+else exit 0
+fi
 }
 #
 #############################################
@@ -486,7 +506,7 @@ if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
 fi
-echo "Starting Installation..."
+ask_Start
 
 ask_Check-OS
 ask_Net
