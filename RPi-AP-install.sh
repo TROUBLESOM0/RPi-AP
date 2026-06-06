@@ -22,6 +22,7 @@ echo -e "\n\n"
 #################
 Error='\033[1;31m'   # Bold red
 Off='\033[0m'
+this_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 rootdir=/usr/local/etc/RPi-AP
 bkupdir=$rootdir/BACKUPS
 stadir=$rootdir/sta-ap
@@ -38,7 +39,7 @@ wlogin=$stadir/web/login.php
 ap=/var/www/html
 
 # Change to latest release
-gitLink="https://github.com/TROUBLESOM0/RPi-AP/archive/refs/heads/main.zip"
+gitLink="https://  [ latest release ]"
 
 
 service=RPi-ap-check.service
@@ -189,99 +190,6 @@ echo "$(date)---RE-INSTALLING RPI-AP---" >> /usr/local/etc/RPi-ap/sta-ap/log
 fi
 
 exec > >(tee -a /usr/local/etc/RPi-ap/sta-ap/log) 2>&1
-}
-#
-##################
-###   ASK_DL   ###
-##################
-ask_DL () {
-echo "Downloading files..."
-wget -q $gitLink -P /usr/local/etc/
-
-if [[ -f /usr/local/etc/main.zip ]]
-then :
-else echo -e "\n***ERROR:  Download failed. Run installation again."
-exit 1
-fi
-
-unzip -qq -o /usr/local/etc/main.zip -d /usr/local/etc/
-
-if [[ -d /usr/local/etc/RPi-AP-main ]]
-then :
-else echo -e "\n***ERROR: There was an issue extracting the downloaded .zip file in /usr/local/etc/."
-echo "Run installation again."
-exit 1
-fi
-
-mv /usr/local/etc/RPi-AP-main/ /usr/local/etc/RPi-ap
-rm /usr/local/etc/main.zip
-
-if [[ -d $rootdir ]]
-then echo "Download complete"
-echo "Verifying presence of files..."
-fi
-
-if [[ -f $stadir/c_start.sh ]]
-then :
-else echo "c_start.sh missing"
-exit 1
-fi
-
-if [[ -f $stadir/check-net.sh ]]
-then :
-else echo "check-net.sh missing"
-exit 1
-fi
-
-if [[ -f $stadir/sta-ap.start ]]
-then :
-else echo "sta-ap.start missing"
-exit 1
-fi
-
-if [[ -f $stadir/sta-ap.stop ]]
-then :
-else echo "sta-ap.stop missing"
-exit 1
-fi
-
-if [[ -f $rootdir/uninstall-ap.sh ]]
-then :
-else echo "uninstall-ap.sh missing"
-exit 1
-fi
-
-# add sudo file to /etc/sudoers.d/
-if [[ ! -f /etc/sudoers.d/010_RPi-ap ]]
-then echo "Adding permission to sudoers.d"
-cp $stadir/$req/010_RPi-ap /etc/sudoers.d/010_RPi-ap
-chmod 440 /etc/sudoers.d/010_RPi-ap
-  if [[ -f /etc/sudoers.d/010_RPi-ap ]]
-  then echo "sudoers file added"
-  else echo "***ERROR adding sudoers file***"
-  fi
-else echo "sudoers file already exists"
-echo "updating..."
-rm /etc/sudoers.d/010_RPi-ap
-cp $stadir/$req/010_RPi-ap /etc/sudoers.d/010_RPi-ap
-chmod 440 /etc/sudoers.d/010_RPi-ap
-  if [[ -f /etc/sudoers.d/010_RPi-ap ]]
-  then echo "sudoers file updated"
-  else echo "***ERROR updating sudoers file***"
-  fi
-fi
-
-#########################
-# Configure Permissions #
-#########################
-chmod u+x,g+x $c_start
-chmod u+x,g+x $check_net
-chmod u+x,g+x $start_ap
-chmod u+x,g+x $stop_ap
-chown root:www-data $run_check
-chmod u+rw,g+rx,o+r $run_check
-chmod u+rwx,g+rx,o+r $uninstall_ap
-
 }
 # 
 ############################
@@ -438,6 +346,68 @@ fi
 
 }
 #
+##################
+###   ASK_DL   ###
+##################
+ask_DL () {
+echo "Downloading files..."
+wget -q $gitLink -P /usr/local/etc/
+
+if [[ -f /usr/local/etc/main.zip ]]
+then :
+else echo -e "\n***ERROR:  Download failed. Run installation again."
+exit 1
+fi
+
+unzip -qq -o /usr/local/etc/main.zip -d /usr/local/etc/
+
+if [[ -d /usr/local/etc/RPi-AP-main ]]
+then :
+else echo -e "\n***ERROR: There was an issue extracting the downloaded .zip file in /usr/local/etc/."
+echo "Run installation again."
+exit 1
+fi
+
+mv /usr/local/etc/RPi-AP-main/ /usr/local/etc/RPi-AP
+rm /usr/local/etc/main.zip
+
+if [[ -d $rootdir ]]
+then echo "Download complete"
+fi
+
+# add sudo file to /etc/sudoers.d/
+if [[ ! -f /etc/sudoers.d/010_RPi-ap ]]
+then echo "Adding permission to sudoers.d"
+cp $stadir/$req/010_RPi-ap /etc/sudoers.d/010_RPi-ap
+chmod 440 /etc/sudoers.d/010_RPi-ap
+  if [[ -f /etc/sudoers.d/010_RPi-ap ]]
+  then echo "sudoers file added"
+  else echo "***ERROR adding sudoers file***"
+  fi
+else echo "sudoers file already exists"
+echo "updating..."
+rm /etc/sudoers.d/010_RPi-ap
+cp $stadir/$req/010_RPi-ap /etc/sudoers.d/010_RPi-ap
+chmod 440 /etc/sudoers.d/010_RPi-ap
+  if [[ -f /etc/sudoers.d/010_RPi-ap ]]
+  then echo "sudoers file updated"
+  else echo "***ERROR updating sudoers file***"
+  fi
+fi
+
+#########################
+# Configure Permissions #
+#########################
+chmod u+x,g+x $c_start
+chmod u+x,g+x $check_net
+chmod u+x,g+x $start_ap
+chmod u+x,g+x $stop_ap
+chown root:www-data $run_check
+chmod u+rw,g+rx,o+r $run_check
+chmod u+rwx,g+rx,o+r $uninstall_ap
+
+}
+#
 #################
 ###  ASK_NET  ###
 #################
@@ -510,19 +480,13 @@ ask_Start
 
 ask_Check-OS
 ask_Net
+ask_DL
+
+bash verify.sh
+
 ask_Check-Previous
 Package_Checks
 
-echo "Checking for previous installation"
-
-if test -d $rootdir
-then rm -r $rootdir
-echo -e "removed previous installation\n"
-else echo -e "No previous installation found. Start initial install\n"
-fi
-
-echo "Downloading RPI-AP..."
-ask_DL
 echo ""
 ask_Log
 echo -e "\nConfiguring service in systemd..."
