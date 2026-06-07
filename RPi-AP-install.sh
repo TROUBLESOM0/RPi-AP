@@ -408,18 +408,6 @@ chmod u+rwx,g+rx,o+r $uninstall_ap
 
 }
 #
-#################
-###  ASK_NET  ###
-#################
-ask_Net () {
-ping -c 1 8.8.8.8 &> /dev/null
-if [ $? -ne 0 ]
-then echo "Internet Is Required!!!"
-exit 0
-else :
-fi
-}
-#
 ##########################
 #      ask_Check-OS      #
 ##########################
@@ -457,6 +445,18 @@ fi
 
 }
 #
+#################
+###  ASK_NET  ###
+#################
+ask_Net () {
+ping -c 1 8.8.8.8 &> /dev/null
+if [ $? -ne 0 ]
+then echo "Internet Is Required!!!"
+exit 0
+else :
+fi
+}
+#
 ######################
 #      ask_Start     #
 ######################
@@ -477,9 +477,8 @@ then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
 fi
 ask_Start
-
-ask_Check-OS
 ask_Net
+ask_Check-OS
 ask_DL
 
 bash verify.sh
