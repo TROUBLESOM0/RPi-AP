@@ -42,7 +42,12 @@ then echo "Found $SOURCE_FOLDER folder"
 
   else echo "Found a previous backup..."
 
-    if compgen -G $BACKUP_FOLDER* > /dev/null
+    if compn -G $BACKUP_FOLDER* > /dev/null 2>&1
+    then echo "$SOURCE_FOLDER was previously backed up"
+    echo "Appending ${DATE} to new backup"
+    sudo mkdir -p $BACKUP_FOLDER-$DATE
+    cp -a $SOURCE_FOLDER $BACKUP_FOLDER-$DATE/
+    elif [ -n "$(find . -maxdepth 1 -type d -name '$BACKUP_FOLDER*' -print -quit)" ]
     then echo "$SOURCE_FOLDER was previously backed up"
     echo "Appending ${DATE} to new backup"
     sudo mkdir -p $BACKUP_FOLDER-$DATE
