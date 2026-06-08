@@ -2,9 +2,8 @@
 Error='\033[1;31m'   # Bold red
 Off='\033[0m'
 DATE=$(date +%Y%m%d)
-USER=${SUDO_USER:-$USER}
-SOURCE_FOLDER="/etc/hostapd"
-BACKUP_FOLDER="/home/$USER/RPi-AP_backup_storage/hostapd_bkup"
+SOURCE_FOLDER="/etc/hostap"
+BACKUP_FOLDER=$bkupdir
 
 # PULL ROOTDIR VARIABLE FROM MAIN SCRIPT
 # PULL BACKUPDIR VARIABLE FROM MAIN SCRIPT
@@ -18,7 +17,7 @@ echo "---------------------------------"
 echo "    Backing Up $SOURCE_FOLDER    "
 echo -e "-------------------------------\n"
 
-if [ -d SOURCE_FOLDER ]
+if [ -d $SOURCE_FOLDER ]
 then echo "Found $SOURCE_FOLDER folder"
 
   if [ ! -d $BACKUP_FOLDER ]
