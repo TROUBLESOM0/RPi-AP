@@ -22,6 +22,7 @@ echo -e "\n\n"
 #################
 Error='\033[1;31m'   # Bold red
 Off='\033[0m'
+USER=${SUDO_USER:-$USER}
 this_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 rootdir=/usr/local/etc/RPi-AP
 bkupdir=$rootdir/BACKUPS
@@ -277,6 +278,7 @@ echo $_break
 # check if hostapd is installed
 if type hostapd &>/dev/null
 then echo -e "\nHostapd already installed\n"
+  if [[ -f 
 # FIGURE OUT HOW TO GET /DEPLOY/HOSTAPDBKUP ON DEVICE
 # CHECK FOR /DEPLOY/HOSTAPDBKUP.SH AND RUN IT
 # IT SHOULD END THIS SCRIPT ON FAILURE
@@ -340,6 +342,7 @@ if [[ "${install_input,,}" == "y" || "${install_input,,}" == "yes" ]]
 then 
 #
 #    COMMAND TO REMOVE RPi-AP
+#    MUST INSTALL BECAUSE WILL EXIT ON "NO"
 #
 else exit 0
 fi
@@ -481,7 +484,7 @@ ask_Net
 ask_Check-OS
 ask_DL
 
-bash verify.sh
+bash verify_files.sh || exit 1
 
 ask_Check-Previous
 Package_Checks
