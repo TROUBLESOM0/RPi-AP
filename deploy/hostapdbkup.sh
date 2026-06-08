@@ -1,13 +1,13 @@
 #!/bin/bash
 Error='\033[1;31m'   # Bold red
 Off='\033[0m'
-DATE=$(date +%Y%m%d)
-SOURCE_FOLDER="/etc/hostap"
-BACKUP_FOLDER=$bkupdir
+DATE=$(date +%Y%m%d_%H%M)
+USER=${SUDO_USER:-$USER}
+SOURCE_FOLDER="/etc/hostapd"
+SOURCE_NAME="${SOURCE_FOLDER##*/}_bkup"
+BACKUP_FOLDER=$bkupdir/$SOURCE_NAME
 
-# PULL ROOTDIR VARIABLE FROM MAIN SCRIPT
-# PULL BACKUPDIR VARIABLE FROM MAIN SCRIPT
-
+echo "backup folder is : $BACKUP_FOLDER"
 if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
@@ -22,7 +22,7 @@ then echo "Found $SOURCE_FOLDER folder"
 
   if [ ! -d $BACKUP_FOLDER ]
   then echo "Creating backup folder in $BACKUP_FOLDER"
-  sudo -u $USER mkdir -p $BACKUP_FOLDER/
+  sudo mkdir -p $BACKUP_FOLDER/
 
     if [ -d $BACKUP_FOLDER ]
     then echo "Copying $SOURCE_FOLDER"
@@ -42,13 +42,13 @@ then echo "Found $SOURCE_FOLDER folder"
 
   else echo "Found a previous backup..."
 
-    if [ -d $BACKUP_FOLDER* ]
+    if compgen -G $BACKUP_FOLDER* > /dev/null
     then echo "$SOURCE_FOLDER was previously backed up"
     echo "Appending ${DATE} to new backup"
-    sudo -u $USER mkdir -p $BACKUP_FOLDER$DATE
-    cp -a $SOURCE_FOLDER $BACKUP_FOLDER$DATE/
+    sudo mkdir -p $BACKUP_FOLDER-$DATE
+    cp -a $SOURCE_FOLDER $BACKUP_FOLDER-$DATE/
     else echo "Copying $SOURCE_FOLDER"
-    cp -a $SOURCE_FOLDER $BACKUP_FOLDER$DATE/
+    cp -a $SOURCE_FOLDER $BACKUP_FOLDER-$DATE/
     fi
 
   fi
