@@ -40,9 +40,6 @@ fi
 dpkg -l | grep -qw libapache2-mod-php$pV
 if [ $? -eq 0 ]
 then echo -e "\nLoading apache php module"
-ask_Loadmod-php
-
-
 php_ver=$(php -v | head -n 1 | awk '{print $2}' | cut -d '.' -f1-2)
 echo "Identifying the module name based on the PHP version"
 module_name="php${php_ver}"
