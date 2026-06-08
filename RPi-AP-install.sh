@@ -264,6 +264,8 @@ echo -e "\nUnzip is not installed"
 ask_Installunzip
 fi
 
+echo $_break
+
 # check if curl is installed
 if type wget &>/dev/null
 then echo -e "\nwget already installed\n"
