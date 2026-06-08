@@ -22,7 +22,7 @@ echo "checking for errors..."
   if systemctl is-enabled "$service" &>/dev/null
   then echo -e "service is enabled\n"
   else
-  echo "There was an issue configuring the service '$service'!"
+  echo -e "${Error}ERROR${Off} There was an issue configuring the service '$service'!"
   echo "Run Uninstall script"
   echo -e "Then try re-installing\n"
   exit 1
