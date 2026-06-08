@@ -31,6 +31,8 @@ start_ap=$stadir/sta-ap.start
 stop_ap=$stadir/sta-ap.stop
 install_ap=$rootdir/RPi-AP-install.sh
 uninstall_ap=$rootdir/uninstall-ap.sh
+deploy=$rootdir/deploy
+hostapdbkup_scr=$deploy/hostapdbkup.sh
 c_start=$stadir/c_start.sh
 check_net=$stadir/check-net.sh
 run_check=$stadir/web/run-check.sh
@@ -280,10 +282,14 @@ echo $_break
 # check if hostapd is installed
 if type hostapd &>/dev/null
 then echo -e "\nHostapd already installed\n"
-  if [[ -f 
-# FIGURE OUT HOW TO GET /DEPLOY/HOSTAPDBKUP ON DEVICE
-# CHECK FOR /DEPLOY/HOSTAPDBKUP.SH AND RUN IT
-# IT SHOULD END THIS SCRIPT ON FAILURE
+  if [[ -f $hostapdbkup_scr ]]
+  then source $hostapdbkup_scr
+  else echo -e "${Error}ERROR${Off} hostapdbkup.sh missing.  Unable to backup hostapd before making changes"
+  exit 1
+  fi
+# FIGURE OUT HOW TO GET /DEPLOY/HOSTAPDBKUP ON DEVICE = DL previous to this function
+# CHECK FOR /DEPLOY/HOSTAPDBKUP.SH AND RUN IT = doing above
+# IT SHOULD END THIS SCRIPT ON FAILURE = yeppers, it does
 else
 echo -e "\nHostapd is not installed"
 ask_Installhostapd
