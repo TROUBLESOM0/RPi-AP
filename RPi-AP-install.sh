@@ -44,6 +44,7 @@ checkapache=$deploy/check_apache.sh
 installapache=$deploy/Installapache.sh
 checkapachephp=$deploy/check_apache-php.sh
 installapachephp=$deploy/Installapache-php.sh
+installservice=$deploy/Installservice.sh
 
 c_start=$stadir/c_start.sh
 check_net=$stadir/check-net.sh
@@ -62,43 +63,6 @@ _break="---------------"
 
 
 #
-###############################
-###   ASK_INSTALL-SERVICE   ###
-###############################
-ask_Install-service () {
-# check service file exists
-
-if [[ -f /etc/systemd/system/$service ]]
-then echo "removing existing service"
-systemctl disable $service
-else :
-fi
-
-if [[ ! -f $stadir/$req/$service ]]
-then echo -e "${Error}ERROR${Off} $service is missing!\n"
-exit 1
-else
-chown root:root $stadir/$req/$service
-chmod u+rwx,g+rx,o+r $stadir/$req/$service
-sleep 2
-ln -s $stadir/$req/$service /etc/systemd/system/$service
-sleep 1
-echo "enabling service..."
-systemctl enable $service
-# check for errors on service
-echo "checking for errors..."
-  if systemctl is-enabled "$service" &>/dev/null
-  then echo -e "service is enabled\n"
-  else
-  echo "There was an issue configuring the service '$service'!"
-  echo "Run Uninstall script"
-  echo -e "Then try re-installing\n"
-  exit 1
-  fi
-fi
-
-}
-#
 ###################
 ###   ASK_LOG   ###
 ###################
@@ -108,13 +72,13 @@ ask_Log () {
 if [[ ! -f /usr/local/etc/RPi-ap/sta-ap/log ]]
 then
 echo -e "Creating log file...\n"
-touch /usr/local/etc/RPi-ap/sta-ap/log
-echo "$(date)---INSTALLATION FOR RPI-AP---" >> /usr/local/etc/RPi-ap/sta-ap/log
-else echo "" >> /usr/local/etc/RPi-ap/sta-ap/log
-echo "$(date)---RE-INSTALLING RPI-AP---" >> /usr/local/etc/RPi-ap/sta-ap/log
+touch $stadir/log
+echo "$(date)---INSTALLATION FOR RPI-AP---" >> $stadir/log
+else echo "" >> $stadir/log
+echo "$(date)---RE-INSTALLING RPI-AP---" >> $stadir/log
 fi
 
-exec > >(tee -a /usr/local/etc/RPi-ap/sta-ap/log) 2>&1
+exec > >(tee -a $stadir/log) 2>&1
 }
 #
 ##################
@@ -259,7 +223,7 @@ source $checkpackages || exit 1
 echo ""
 ask_Log
 echo -e "\nConfiguring service in systemd..."
-ask_Install-service
+source $installservice || exit 1
 echo -e "\nREBOOTING\n"
 reboot
 exit 0
