@@ -12,7 +12,7 @@ echo "##    1. Perform initial checks to determine required system programs are 
 echo "##    2. Download a selection of .bash scripts and save in the location:                            ##"
 echo -e "##      \033[1;33m/usr/local/etc/RPi-AP\e[0m                                                     ##"
 echo "##    3. Setup the RPi-ap-check.service into /etc/systemd/system/ folder to run on boot             ##"
-echo -e "##      - this creates a local AP for configuring a wireless connection if none is present\n     ##"
+echo -e "##      - this creates a local AP for configuring a wireless connection if none is present       ##"
 echo "######################################################################################################"
 echo -e "\n\n"
 #
