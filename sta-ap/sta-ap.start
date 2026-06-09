@@ -15,7 +15,7 @@ fi
 #
 ### VARIABLES ###
 #################
-dir=/usr/local/etc/RPi-ap/sta-ap
+dir=/usr/local/etc/RPi-AP/sta-ap
 req=required
 whtml=$dir/web/index.html
 wlogin=$dir/web/login.php
@@ -173,6 +173,6 @@ systemctl start dhcpcd.service
 
 # DONE - REBOOT
 echo "COMPLETE CONFIG"
-echo "BROADCASTING   RPi-ap-XXX"
+echo "BROADCASTING   RPi-AP-XXX"
 exit 0
 #reboot now
