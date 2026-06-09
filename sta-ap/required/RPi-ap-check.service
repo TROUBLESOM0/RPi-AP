@@ -1,12 +1,12 @@
 [Unit]
 Description=Run checks to determine whether STA-AP needs to be activated - version.1
-Documentation=https://github.com/TROUBLESOM0/LilyPin
+Documentation=https://github.com/TROUBLESOM0/RPi-AP
 
 [Install]
 WantedBy=multi-user.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/sudo /usr/local/etc/RPi-ap/sta-ap/c_start.sh
+ExecStart=/usr/bin/sudo /usr/local/etc/RPi-AP/sta-ap/c_start.sh
 User=root
 Environment=DISPLAY=:0
