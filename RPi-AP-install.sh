@@ -110,6 +110,11 @@ if [[ -d $rootdir ]]
 then echo "Download complete"
 fi
 
+# REMOVE README FROM ROOT
+# 
+
+
+
 # add sudo file to /etc/sudoers.d/
 if [[ ! -f /etc/sudoers.d/010_RPi-ap ]]
 then echo "Adding permission to sudoers.d"
@@ -196,7 +201,7 @@ fi
 #      ask_Start     #
 ######################
 ask_Start () {
-read -r -p "Do you want to begin installation of RPi-AP" start_input
+read -r -p "Do you want to begin installation of RPi-AP? " start_input
 if [[ ${start_input,,} == "y" || ${start_input,,} == "yes" ]]
 then :
 else exit 0
