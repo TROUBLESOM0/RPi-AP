@@ -4,7 +4,7 @@
 # Configuration script to convert Pi Zero W into Local Access Point
 # 
 #
-# SSID = RPi-ap-{random_number}
+# SSID = RPi-AP-{random_number}
 #
 # Check script is running as root
 if [[ $( whoami ) != "root" ]]
