@@ -12,7 +12,7 @@ echo ""
 echo "----------------------------------------------------------------------"
 echo ""
 echo "FILE/FOLDER REMOVAL :"
-echo "   - /usr/local/etc/RPi-ap/ "
+echo "   - /usr/local/etc/RPi-AP/ "
 echo "   - RPi-ap-check.service in /etc/systemd/system/ "
 echo "   - var/www/html/ login.php and login.data "
 echo "   - /etc/hostpad/hostapd.conf "
@@ -39,8 +39,8 @@ echo ""
 #
 ### VARIABLES ###
 #################
-rootdir=/usr/local/etc/RPi-ap
-stadir=/usr/local/etc/RPi-ap/sta-ap
+rootdir=/usr/local/etc/RPi-AP
+stadir=/usr/local/etc/RPi-AP/sta-ap
 req=required
 whtml=$stadir/web/index.html
 wlogin=$stadir/web/login.php
