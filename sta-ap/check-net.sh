@@ -4,22 +4,23 @@
 # Check network connection by pinging Google or Cloudflare
 #
 # Checking for root
+stadir=/usr/local/etc/RPi-AP/sta-ap
 if [[ $( whoami ) != "root" ]]
 then echo -e "${Error}ERROR${Off} Must be run as sudo or root"
 exit 1
 fi
 #logs
-if [[ ! -f /usr/local/etc/RPi-ap/sta-ap/log ]]
+if [[ ! -f $stadir/log ]]
 then
-touch /usr/local/etc/RPi-ap/sta-ap/log
-echo "$(date)---First Run check-net.sh---" >> /usr/local/etc/RPi-ap/sta-ap/log
-else echo "" >> /usr/local/etc/RPi-ap/sta-ap/log
-echo "$(date)---RUNNING CHECK-NET---" >> /usr/local/etc/RPi-ap/sta-ap/log
+touch $stadir/log
+echo "$(date)---First Run check-net.sh---" >> $stadir/log
+else echo "" >> $stadir/log
+echo "$(date)---RUNNING CHECK-NET---" >> $stadir/log
 fi
-exec > >(tee -a /usr/local/etc/RPi-ap/sta-ap/log) 2>&1
+exec > >(tee -a $stadir/log) 2>&1
 #
 # variables
-dir=/usr/local/etc/RPi-ap/sta-ap
+dir=$stadir
 ap=/var/www/html
 bk=$dir/pre-sys-bkup
 #
